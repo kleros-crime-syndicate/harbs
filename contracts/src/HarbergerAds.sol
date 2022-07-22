@@ -123,12 +123,20 @@ abstract contract HarbergerAds is IHarbergerAds {
     }
   }
 
-  function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
-
+  function changeValuation(uint256 _tokenId, uint256 _valuation) external {
+    Ad storage ad = ads[_tokenId];
+    if (ad.valuation > _valuation) {
+      // to decrease valuation, you need to pass the period
+      require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Too soon to decrease");
+    }
+    ad.valuation = _valuation;
+    ad.valuationChangeTimestamp = block.timestamp;
   }
 
-  function setAd(uint256 _tokenId, string calldata _ipfsUri) override external {
-
+  function setAd(uint256 _tokenId, string calldata _ipfsUri) external {
+    Ad storage ad = ads[_tokenId];
+    require(ad.owner == msg.sender, "Only owner changes ad");
+    emit AdSet(_tokenId, _ipfsUri);
   }
 
   /// INTERNAL FUNCTIONS
