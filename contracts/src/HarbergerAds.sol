@@ -161,7 +161,7 @@ abstract contract HarbergerAds is IHarbergerAds {
     return perYear / 31_536_000; // <-- some tokens will go to zero like this lol
   }
 
-  function minimumFund(uint256 _value) view public {
+  function minimumFund(uint256 _value) view public returns(uint256) {
     uint256 rate = taxesPerSecond(_value);
     return rate * 2_628_000;
   } 
