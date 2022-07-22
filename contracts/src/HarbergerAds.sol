@@ -22,15 +22,18 @@ abstract contract HarbergerAds is IHarbergerAds {
   uint256 immutable taxRate; // rate times divider, per year.
   uint256 constant DIVIDER = 10_000;
 
+  uint256 immutable cooldownPeriod; // certain actions need the cooldownPeriod to elapse
+
   IERC20 immutable currency;
   address immutable collector; // recipient of the taxes
 
   mapping(uint256 => Ad) ads;
   mapping(address => uint256) balances;
 
-  constructor(uint256 _taxRate, IERC20 _currency) {
+  constructor(uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency) {
     taxRate = _taxRate;
     currency = _currency;
+    cooldownPeriod = _cooldownPeriod;
     collector = msg.sender;
   }
 
@@ -43,31 +46,81 @@ abstract contract HarbergerAds is IHarbergerAds {
     uint256 amountDue = dueTaxes(_tokenId);
     if (amountDue > ad.fund) {
       // there's not enough to pay. item no longer belongs to original owner.
-      // todo: buy and send offer to collector.
-
+      // send whatever's left to the collector
+      _payTax(_tokenId, ad.fund);
+      // buy from collector
+      currency.transferFrom(msg.sender, collector, _offer);
     } else {
       // check if offer is over valuation
       require(ad.valuation <= _offer, "Lowball offer");
       // cool, proceed to buy the item
       // first, original owner pays due taxes
-      currency.transfer(collector, amountDue);
+      _payTax(_tokenId, ad.fund); // updates ad.fund
       // reimburse remainder
-      currency.transfer(ad.owner, ad.fund - amountDue);
-      
+      currency.transfer(ad.owner, ad.fund);
+
+      // buy the item from previous owner
+      require(currency.transferFrom(msg.sender, ad.owner, _offer), "Bad transfer");
+    }
+    // is new fund enough?
+    require(_fund >= minimumFund(_valuation), "Not enough funds");
+    require(currency.transferFrom(msg.sender, address(this), _fund), "Bad transfer");
+
+    // set the ad data
+    ad.owner = msg.sender;
+    ad.fund = _fund;
+    ad.valuation = _valuation;
+    ad.valuationChangeTimestamp = block.timestamp;
+    ad.taxDueTimestamp = block.timestamp;
+  }
+
+  function fund(uint256 _tokenId, uint256 _value) external {
+    Ad storage ad = ads[_tokenId];
+    require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
+    ad.fund += _value;
+  }
+
+  function defund(uint256 _tokenId, uint256 _value) external {
+    Ad storage ad = ads[_tokenId];
+    require(ad.owner == msg.sender, "Not owner");
+    require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Wait more time");
+    // check available amount
+    uint256 amountDue = dueTaxes(_tokenId);
+    if (amountDue <= ad.fund) {
+      // there is something remaining for defund.
+      _payTax(_tokenId, amountDue); // updates the fund
+      if (_value < ad.fund) {
+        ad.fund -= _value;
+        currency.transfer(ad.owner, _value);
+      } else {
+        // defund all available, but revoke the item too.
+        currency.transfer(ad.owner, ad.fund);
+        _revoke(_tokenId);
+      }
+    } else {
+      // there's not enough to pay the owed taxes. pay everything to collector.
+      currency.transfer(collector, ad.fund);
+      // now revoke
+      _revoke(_tokenId);
     }
   }
 
-  function fund(uint256 _tokenId, uint256 _value) override external {
-    
-  }
-
-  function defund(uint256 _tokenId, uint256 _value) override external {
-    // check how much is due
-    // uint256 dueTaxes = 
-  }
-
-  function revoke(uint256 _tokenId) override external {
-
+  function revoke(uint256 _tokenId) external {
+    Ad storage ad = ads[_tokenId];
+    require(ad.owner == msg.sender, "Not owner");
+    // check available amount
+    uint256 amountDue = dueTaxes(_tokenId);
+    if (amountDue <= ad.fund) {
+      _payTax(_tokenId, amountDue); // updates ad.fund
+      // defund all available, but revoke the item too.
+      currency.transfer(ad.owner, ad.fund);
+      _revoke(_tokenId);
+    } else {
+      // there's not enough to pay the owed taxes. pay everything to collector.
+      currency.transfer(collector, ad.fund);
+      // now revoke
+      _revoke(_tokenId);
+    }
   }
 
   function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
@@ -80,6 +133,23 @@ abstract contract HarbergerAds is IHarbergerAds {
 
   /// INTERNAL FUNCTIONS
 
+  function _revoke(uint256 _tokenId) internal {
+    // revokes the item.
+    Ad storage ad = ads[_tokenId];
+    ad.fund = 0;
+    ad.owner = address(0);
+    // ad.taxDueTimestamp doesn't matter.
+    ad.valuation = 0;
+    // ad.valuationChangeTimestamp doesn't matter.
+  }
+
+  function _payTax(uint256 _tokenId, uint256 _amount) internal {
+    Ad storage ad = ads[_tokenId];
+    currency.transfer(collector, _amount);
+    ad.fund -= _amount;
+    ad.taxDueTimestamp = block.timestamp;
+  }
+
   /// VIEW FUNCTIONS
 
   function dueTaxes(uint256 _tokenId) view public returns (uint256) {
@@ -91,6 +161,11 @@ abstract contract HarbergerAds is IHarbergerAds {
   function taxesPerSecond(uint256 _value) view public returns (uint256) {
     // figures out dynamically how much is owed per second
     uint256 perYear = _value * taxRate / DIVIDER;
-    return perYear / 31536000;
+    return perYear / 31_536_000; // <-- some tokens will go to zero like this lol
   }
+
+  function minimumFund(uint256 _value) view public returns(uint256) {
+    uint256 rate = taxesPerSecond(_value);
+    return rate * 2_628_000;
+  } 
 }
