@@ -1,4 +1,4 @@
-import "@openzeppelin/contracts/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 interface IHarberger is IERC721 {
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) external;
