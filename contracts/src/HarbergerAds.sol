@@ -7,25 +7,25 @@ import "./interfaces/IHarbergerAds.sol";
 
 contract HarbergerAds is IHarbergerAds {
   struct Ad {
-    uint256 valuation; // current valuation of the item.
-    uint256 valuationChangeTimestamp; // must be set any time valuation changes
-    uint256 lastPaidTimestamp; // taxes are paid on collect and meaningful interactions (value change, buys...)
-    uint256 fund; // after revoking, due is substracted and then refunded to owner.
     address owner;
+    uint256 valuation; // current valuation of the item.
+    uint256 fund; // after revoking, due is substracted and then refunded to owner.
+    uint256 lastPaidTimestamp; // taxes are paid on collect and meaningful interactions (value change, buys...)
+    uint256 nextValuationTimestamp; // must be set any time valuation changes
   }
 
-  event AdSet(uint256 _tokenId, string _ipfsUri);
+  event AdSet(uint256 _tokenId, string _uri);
 
-  uint256 immutable taxRate; // rate times divider, per year.
-  uint256 constant DIVIDER = 10_000;
+  uint256 immutable public taxRate; // rate times divider, per year.
+  uint256 constant public DIVIDER = 10_000;
 
-  uint256 immutable cooldownPeriod; // certain actions need the cooldownPeriod to elapse
+  uint256 immutable public cooldownPeriod; // certain actions need the cooldownPeriod to elapse
 
-  IERC20 immutable currency;
-  address immutable collector; // recipient of the taxes
+  IERC20 immutable public currency;
+  address immutable public collector; // recipient of the taxes
 
-  mapping(uint256 => Ad) ads;
-  mapping(address => uint256) balances;
+  mapping(uint256 => Ad) public ads;
+  mapping(address => uint256) public balances;
 
   constructor(uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency) {
     taxRate = _taxRate;
@@ -67,7 +67,7 @@ contract HarbergerAds is IHarbergerAds {
     ad.owner = msg.sender;
     ad.fund = _fund;
     ad.valuation = _valuation;
-    ad.valuationChangeTimestamp = block.timestamp;
+    ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
     ad.lastPaidTimestamp = block.timestamp;
   }
 
@@ -80,7 +80,7 @@ contract HarbergerAds is IHarbergerAds {
   function defund(uint256 _tokenId, uint256 _value) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
-    require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Wait more time");
+    require(block.timestamp >= ad.nextValuationTimestamp, "Wait more time");
     // check available amount
     uint256 amountDue = dueTaxes(_tokenId);
     if (amountDue <= ad.fund) {
@@ -111,13 +111,13 @@ contract HarbergerAds is IHarbergerAds {
       _payTax(_tokenId, amountDue); // updates ad.fund
       // defund all available, but revoke the item too.
       currency.transfer(ad.owner, ad.fund);
-      _revoke(_tokenId);
     } else {
       // there's not enough to pay the owed taxes. pay everything to collector.
       currency.transfer(collector, ad.fund);
       // now revoke
-      _revoke(_tokenId);
     }
+
+    _revoke(_tokenId);
   }
 
   function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
@@ -125,16 +125,16 @@ contract HarbergerAds is IHarbergerAds {
     require(ad.owner == msg.sender, "Only owner");
     if (ad.valuation > _valuation) {
       // to decrease valuation, you need to pass the period
-      require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Too soon to decrease");
+      require(block.timestamp >= ad.nextValuationTimestamp, "Too soon to decrease");
     }
     ad.valuation = _valuation;
-    ad.valuationChangeTimestamp = block.timestamp;
+    ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
   }
 
-  function setAd(uint256 _tokenId, string calldata _ipfsUri) override external {
+  function setAd(uint256 _tokenId, string calldata _uri) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner changes ad");
-    emit AdSet(_tokenId, _ipfsUri);
+    emit AdSet(_tokenId, _uri);
   }
 
   function collect(uint256 _tokenId) override external {
@@ -147,7 +147,7 @@ contract HarbergerAds is IHarbergerAds {
       _revoke(_tokenId);
     } else {
       // there's enough to pay the owed taxes. pay only due taxes to collector.
-      _payTax(_tokenId, taxes); // updates ad.fund      
+      _payTax(_tokenId, taxes); // updates ad.fund
     }
   }
 
@@ -181,16 +181,16 @@ contract HarbergerAds is IHarbergerAds {
     revert();
   }
 
-  function getApproved(uint256 tokenId) view override external returns (address) {
+  function getApproved(uint256 tokenId) pure override external returns (address) {
     revert();
   }
 
-  function isApprovedForAll(address owner, address operator) view override external returns (bool) {
+  function isApprovedForAll(address owner, address operator) pure override external returns (bool) {
     revert();
   }
-  
+
   /// IERC165 STUFF
-  function supportsInterface(bytes4 interfaceId) external view returns (bool) {
+  function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
     return (interfaceId == 0x861c59cd);
   }
 
@@ -215,20 +215,20 @@ contract HarbergerAds is IHarbergerAds {
 
   /// VIEW FUNCTIONS
 
-  function dueTaxes(uint256 _tokenId) view public returns (uint256) {
+  function dueTaxes(uint256 _tokenId) public view returns (uint256) {
     Ad storage ad = ads[_tokenId];
     uint256 rate = taxesPerSecond(ad.valuation);
     return (rate * (block.timestamp - ad.lastPaidTimestamp));
   }
 
-  function taxesPerSecond(uint256 _value) view public returns (uint256) {
+  function taxesPerSecond(uint256 _value) public view returns (uint256) {
     // figures out dynamically how much is owed per second
     uint256 perYear = _value * taxRate / DIVIDER;
     return perYear / 31_536_000; // <-- some tokens will go to zero like this lol
   }
 
-  function minimumFund(uint256 _value) view public returns(uint256) {
+  function minimumFund(uint256 _value) public view returns(uint256) {
     uint256 rate = taxesPerSecond(_value);
     return rate * 2_628_000;
-  } 
+  }
 }
