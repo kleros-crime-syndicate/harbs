@@ -1,0 +1,12 @@
+node_modules
+
+.parcel-cache
+dist
+
+schema.graphql
+
+package-lock.json
+yarn.lock
+yarn-error.log
+
+.env
