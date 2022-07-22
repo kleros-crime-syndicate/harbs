@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": "./src/",
+        "outDir": "build/dist",
+        "module": "esnext",
+        "target": "es2017",
+        "lib": ["es6", "dom", "esnext.asynciterable", "es2017"],
+        "sourceMap": true,
+        "allowJs": true,
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "rootDir": "src",
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "noUnusedLocals": true,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "removeComments": true,
+        "paths": {
+            "api/*": ["api/*"],
+            "assets/*": ["assets/*"],
+            "components/*": ["components/*"],
+            "constants/*": ["constants/*"],
+            "generated/*": ["generated/*"],
+            "hooks/*": ["hooks/*"],
+            "modules/*": ["modules/*"],
+            "pages/*": ["pages/*"],
+            "styles/*": ["styles/*"],
+            "types/*": ["types/*"],
+            "utils/*": ["utils/*"],
+            "svgs/*": ["assets/svgs/*"],
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "build",
+        "dist",
+        "tailwind.config.cjs"
+    ]
+}
