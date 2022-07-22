@@ -5,10 +5,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interfaces/IHarbergerAds.sol";
 
-abstract contract HarbergerAds is IHarbergerAds {
-
-  // TODO: implement the IERC721 functions
-
+contract HarbergerAds is IHarbergerAds {
   struct Ad {
     uint256 valuation; // current valuation of the item.
     uint256 valuationChangeTimestamp; // must be set any time valuation changes
@@ -140,42 +137,52 @@ abstract contract HarbergerAds is IHarbergerAds {
     emit AdSet(_tokenId, _ipfsUri);
   }
 
+  function collect(uint256 _tokenId) override external {
+    // TODO
+    revert("NOT IMPLEMENTED");
+  }
+
   /// ERC-721 STUFF
 
-  function balanceOf(address _owner) view external returns(uint256) {
+  function balanceOf(address _owner) view override external returns(uint256) {
     return (0); // do later
   }
 
-  function ownerOf(uint256 _tokenId) view external returns(address) {
+  function ownerOf(uint256 _tokenId) view override external returns(address) {
     return (ads[_tokenId].owner);
   }
 
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external {
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) override external {
     revert(); // unimplemented
   }
 
-  function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId) override external {
     revert(); // unimplemented
   }
 
-  function transferFrom(address _from, address _to, uint256 _tokenId) external {
+  function transferFrom(address _from, address _to, uint256 _tokenId) override external {
     revert();
   }
 
-  function approve(address _from, address _to, uint256 _tokenId) external {
+  function approve(address to, uint256 tokenId) override external {
     revert();
   }
 
-  function setApprovalForAll(address operator, bool _approved) external {
+  function setApprovalForAll(address operator, bool _approved) override external {
     revert();
   }
 
-  function getApproved(uint256 tokenId) view external returns (address) {
+  function getApproved(uint256 tokenId) view override external returns (address) {
     revert();
   }
 
-  function isApprovedForAll(address owner, address operator) view external returns (bool) {
+  function isApprovedForAll(address owner, address operator) view override external returns (bool) {
     revert();
+  }
+  
+  /// IERC165 STUFF
+  function supportsInterface(bytes4 interfaceId) external view returns (bool) {
+    return (interfaceId == 0x861c59cd);
   }
 
   /// INTERNAL FUNCTIONS

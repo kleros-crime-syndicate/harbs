@@ -175,6 +175,19 @@ const _abi = [
         name: "_tokenId",
         type: "uint256",
       },
+    ],
+    name: "collect",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_tokenId",
+        type: "uint256",
+      },
       {
         internalType: "uint256",
         name: "_value",

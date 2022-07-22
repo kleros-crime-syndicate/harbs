@@ -33,6 +33,7 @@ export interface IHarbergerInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "buy(uint256,uint256,uint256,uint256)": FunctionFragment;
     "changeValuation(uint256,uint256)": FunctionFragment;
+    "collect(uint256)": FunctionFragment;
     "defund(uint256,uint256)": FunctionFragment;
     "fund(uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
@@ -52,6 +53,7 @@ export interface IHarbergerInterface extends utils.Interface {
       | "balanceOf"
       | "buy"
       | "changeValuation"
+      | "collect"
       | "defund"
       | "fund"
       | "getApproved"
@@ -85,6 +87,10 @@ export interface IHarbergerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "changeValuation",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "collect",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "defund",
@@ -151,6 +157,7 @@ export interface IHarbergerInterface extends utils.Interface {
     functionFragment: "changeValuation",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "defund", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "fund", data: BytesLike): Result;
   decodeFunctionResult(
@@ -283,6 +290,11 @@ export interface IHarberger extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
@@ -375,6 +387,11 @@ export interface IHarberger extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  collect(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   defund(
     _tokenId: PromiseOrValue<BigNumberish>,
     _value: PromiseOrValue<BigNumberish>,
@@ -464,6 +481,11 @@ export interface IHarberger extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -595,6 +617,11 @@ export interface IHarberger extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
@@ -685,6 +712,11 @@ export interface IHarberger extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

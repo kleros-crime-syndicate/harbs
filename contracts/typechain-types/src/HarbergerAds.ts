@@ -33,11 +33,13 @@ export interface HarbergerAdsInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "buy(uint256,uint256,uint256,uint256)": FunctionFragment;
     "changeValuation(uint256,uint256)": FunctionFragment;
+    "collect(uint256)": FunctionFragment;
     "defund(uint256,uint256)": FunctionFragment;
     "dueTaxes(uint256)": FunctionFragment;
     "fund(uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "minimumFund(uint256)": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "revoke(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -55,11 +57,13 @@ export interface HarbergerAdsInterface extends utils.Interface {
       | "balanceOf"
       | "buy"
       | "changeValuation"
+      | "collect"
       | "defund"
       | "dueTaxes"
       | "fund"
       | "getApproved"
       | "isApprovedForAll"
+      | "minimumFund"
       | "ownerOf"
       | "revoke"
       | "safeTransferFrom(address,address,uint256)"
@@ -93,6 +97,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "collect",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "defund",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
@@ -111,6 +119,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "minimumFund",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
@@ -169,6 +181,7 @@ export interface HarbergerAdsInterface extends utils.Interface {
     functionFragment: "changeValuation",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "defund", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "dueTaxes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "fund", data: BytesLike): Result;
@@ -178,6 +191,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "minimumFund",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
@@ -299,9 +316,9 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(
-      owner: PromiseOrValue<string>,
+      _owner: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     buy(
       _tokenId: PromiseOrValue<BigNumberish>,
@@ -314,6 +331,11 @@ export interface HarbergerAds extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -337,7 +359,7 @@ export interface HarbergerAds extends BaseContract {
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { operator: string }>;
+    ): Promise<[string]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -345,10 +367,15 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[BigNumber]>;
+
+    ownerOf(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     revoke(
       _tokenId: PromiseOrValue<BigNumberish>,
@@ -356,17 +383,17 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<ContractTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -393,9 +420,9 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<[BigNumber]>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -407,7 +434,7 @@ export interface HarbergerAds extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(
-    owner: PromiseOrValue<string>,
+    _owner: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -422,6 +449,11 @@ export interface HarbergerAds extends BaseContract {
   changeValuation(
     _tokenId: PromiseOrValue<BigNumberish>,
     _valuation: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  collect(
+    _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -453,8 +485,13 @@ export interface HarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  minimumFund(
+    _value: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   ownerOf(
-    tokenId: PromiseOrValue<BigNumberish>,
+    _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -464,17 +501,17 @@ export interface HarbergerAds extends BaseContract {
   ): Promise<ContractTransaction>;
 
   "safeTransferFrom(address,address,uint256)"(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+    _from: PromiseOrValue<string>,
+    _to: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   "safeTransferFrom(address,address,uint256,bytes)"(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+    _from: PromiseOrValue<string>,
+    _to: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _data: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -501,9 +538,9 @@ export interface HarbergerAds extends BaseContract {
   ): Promise<BigNumber>;
 
   transferFrom(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
-    tokenId: PromiseOrValue<BigNumberish>,
+    _from: PromiseOrValue<string>,
+    _to: PromiseOrValue<string>,
+    _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -515,7 +552,7 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<void>;
 
     balanceOf(
-      owner: PromiseOrValue<string>,
+      _owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -530,6 +567,11 @@ export interface HarbergerAds extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -561,8 +603,13 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -572,17 +619,17 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<void>;
 
     "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _data: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -609,9 +656,9 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<BigNumber>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -662,7 +709,7 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(
-      owner: PromiseOrValue<string>,
+      _owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -677,6 +724,11 @@ export interface HarbergerAds extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -708,8 +760,13 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -719,17 +776,17 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -756,9 +813,9 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<BigNumber>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -771,7 +828,7 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      owner: PromiseOrValue<string>,
+      _owner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -786,6 +843,11 @@ export interface HarbergerAds extends BaseContract {
     changeValuation(
       _tokenId: PromiseOrValue<BigNumberish>,
       _valuation: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    collect(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -817,8 +879,13 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     ownerOf(
-      tokenId: PromiseOrValue<BigNumberish>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -828,17 +895,17 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256,bytes)"(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _data: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -865,9 +932,9 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     transferFrom(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
-      tokenId: PromiseOrValue<BigNumberish>,
+      _from: PromiseOrValue<string>,
+      _to: PromiseOrValue<string>,
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
