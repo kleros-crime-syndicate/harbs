@@ -111,7 +111,10 @@ abstract contract HarbergerAds is IHarbergerAds {
     // check available amount
     uint256 amountDue = dueTaxes(_tokenId);
     if (amountDue <= ad.fund) {
-      
+      _payTax(_tokenId, amountDue); // updates ad.fund
+      // defund all available, but revoke the item too.
+      currency.transfer(ad.owner, ad.fund);
+      _revoke(_tokenId);
     } else {
       // there's not enough to pay the owed taxes. pay everything to collector.
       currency.transfer(collector, ad.fund);
