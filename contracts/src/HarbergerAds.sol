@@ -125,6 +125,7 @@ abstract contract HarbergerAds is IHarbergerAds {
 
   function changeValuation(uint256 _tokenId, uint256 _valuation) external {
     Ad storage ad = ads[_tokenId];
+    require(ad.owner == msg.sender, "Only owner");
     if (ad.valuation > _valuation) {
       // to decrease valuation, you need to pass the period
       require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Too soon to decrease");
