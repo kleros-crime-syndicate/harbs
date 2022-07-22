@@ -139,6 +139,44 @@ abstract contract HarbergerAds is IHarbergerAds {
     emit AdSet(_tokenId, _ipfsUri);
   }
 
+  /// ERC-721 STUFF
+
+  function balanceOf(address _owner) view external returns(uint256) {
+    return (0); // do later
+  }
+
+  function ownerOf(uint256 _tokenId) view external returns(address) {
+    return (ads[_tokenId].owner);
+  }
+
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external {
+    revert(); // unimplemented
+  }
+
+  function safeTransferFrom(address _from, address _to, uint256 _tokenId) external {
+    revert(); // unimplemented
+  }
+
+  function transferFrom(address _from, address _to, uint256 _tokenId) external {
+    revert();
+  }
+
+  function approve(address _from, address _to, uint256 _tokenId) external {
+    revert();
+  }
+
+  function setApprovalForAll(address operator, bool _approved) external {
+    revert();
+  }
+
+  function getApproved(uint256 tokenId) view external returns (address) {
+    revert();
+  }
+
+  function isApprovedForAll(address owner, address operator) view external returns (bool) {
+    revert();
+  }
+
   /// INTERNAL FUNCTIONS
 
   function _revoke(uint256 _tokenId) internal {
