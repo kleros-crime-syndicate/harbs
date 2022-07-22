@@ -21,13 +21,16 @@ contract HarbergerAds is IHarbergerAds {
 
   uint256 immutable public cooldownPeriod; // certain actions need the cooldownPeriod to elapse
 
+  uint256 immutable public count; // number of tokens
+
   IERC20 immutable public currency;
   address immutable public collector; // recipient of the taxes
 
   mapping(uint256 => Ad) public ads;
   mapping(address => uint256) public balances;
 
-  constructor(uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency) {
+  constructor(uint256 _count, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency) {
+    count = _count;
     taxRate = _taxRate;
     currency = _currency;
     cooldownPeriod = _cooldownPeriod;
@@ -38,6 +41,7 @@ contract HarbergerAds is IHarbergerAds {
   // if due taxes cannot be paid, the buyer gets ownership of the item and doesnt have to pay.
 
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) override external {
+    require(_tokenId < count, "Not existing");
     // check if item has enough funds to pay taxes
     Ad storage ad = ads[_tokenId];
     uint256 amountDue = dueTaxes(_tokenId);
@@ -72,12 +76,14 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function fund(uint256 _tokenId, uint256 _value) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
     ad.fund += _value;
   }
 
   function defund(uint256 _tokenId, uint256 _value) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     require(block.timestamp >= ad.nextValuationTimestamp, "Wait more time");
@@ -103,6 +109,7 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function revoke(uint256 _tokenId) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     // check available amount
@@ -121,6 +128,7 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner");
     if (ad.valuation > _valuation) {
@@ -132,12 +140,14 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function setAd(uint256 _tokenId, string calldata _uri) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner changes ad");
     emit AdSet(_tokenId, _uri);
   }
 
   function collect(uint256 _tokenId) override external {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     uint256 taxes = dueTaxes(_tokenId);
     if (taxes >= ad.fund) {
@@ -158,6 +168,7 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function ownerOf(uint256 _tokenId) view override external returns(address) {
+    require(_tokenId < count, "Not existing");
     return (ads[_tokenId].owner);
   }
 
@@ -216,6 +227,7 @@ contract HarbergerAds is IHarbergerAds {
   /// VIEW FUNCTIONS
 
   function dueTaxes(uint256 _tokenId) public view returns (uint256) {
+    require(_tokenId < count, "Not existing");
     Ad storage ad = ads[_tokenId];
     uint256 rate = taxesPerSecond(ad.valuation);
     return (rate * (block.timestamp - ad.lastPaidTimestamp));
