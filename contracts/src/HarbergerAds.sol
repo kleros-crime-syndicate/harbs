@@ -12,7 +12,7 @@ abstract contract HarbergerAds is IHarbergerAds {
   struct Ad {
     uint256 valuation; // current valuation of the item.
     uint256 valuationChangeTimestamp; // must be set any time valuation changes
-    uint256 taxDueTimestamp; // taxes are paid on collect and meaningful interactions (value change, buys...)
+    uint256 lastPaidTimestamp; // taxes are paid on collect and meaningful interactions (value change, buys...)
     uint256 fund; // after revoking, due is substracted and then refunded to owner.
     address owner;
   }
@@ -71,7 +71,7 @@ abstract contract HarbergerAds is IHarbergerAds {
     ad.fund = _fund;
     ad.valuation = _valuation;
     ad.valuationChangeTimestamp = block.timestamp;
-    ad.taxDueTimestamp = block.timestamp;
+    ad.lastPaidTimestamp = block.timestamp;
   }
 
   function fund(uint256 _tokenId, uint256 _value) external {
@@ -146,7 +146,7 @@ abstract contract HarbergerAds is IHarbergerAds {
     Ad storage ad = ads[_tokenId];
     ad.fund = 0;
     ad.owner = address(0);
-    // ad.taxDueTimestamp doesn't matter.
+    // ad.lastPaidTimestamp doesn't matter.
     ad.valuation = 0;
     // ad.valuationChangeTimestamp doesn't matter.
   }
@@ -155,7 +155,7 @@ abstract contract HarbergerAds is IHarbergerAds {
     Ad storage ad = ads[_tokenId];
     currency.transfer(collector, _amount);
     ad.fund -= _amount;
-    ad.taxDueTimestamp = block.timestamp;
+    ad.lastPaidTimestamp = block.timestamp;
   }
 
   /// VIEW FUNCTIONS
@@ -163,7 +163,7 @@ abstract contract HarbergerAds is IHarbergerAds {
   function dueTaxes(uint256 _tokenId) view public returns (uint256) {
     Ad storage ad = ads[_tokenId];
     uint256 rate = taxesPerSecond(ad.valuation);
-    return (rate * (block.timestamp - ad.taxDueTimestamp));
+    return (rate * (block.timestamp - ad.lastPaidTimestamp));
   }
 
   function taxesPerSecond(uint256 _value) view public returns (uint256) {
