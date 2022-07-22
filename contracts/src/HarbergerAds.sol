@@ -2,7 +2,7 @@
 pragma solidity >=0.8.4;
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract HarbergerAds is IHarbergerAds {
   struct Ad {
@@ -34,11 +34,22 @@ contract HarbergerAds is IHarbergerAds {
 
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) external {
     // check if item has enough funds to pay taxes
-    uint256 amountDue = dueTaxes(_tokenId);
-    
-    // check if offer is over valuation
     Ad storage ad = ads[_tokenId];
-    require(ad.valuation)
+    uint256 amountDue = dueTaxes(_tokenId);
+    if (amountDue > ad.fund) {
+      // there's not enough to pay. item no longer belongs to original owner.
+      // todo: buy and send offer to collector.
+
+    } else {
+      // check if offer is over valuation
+      require(ad.valuation <= _offer, "Lowball offer");
+      // cool, proceed to buy the item
+      // first, original owner pays due taxes
+      currency.transfer(collector, amountDue);
+      // reimburse remainder
+      currency.transfer(ad.owner, ad.fund - amountDue);
+      
+    }
   }
 
   function fund(uint256 _tokenId, uint256 _value) external {
