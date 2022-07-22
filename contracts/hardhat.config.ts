@@ -1,121 +1,178 @@
-import "@nomicfoundation/hardhat-toolbox";
-import { config as dotenvConfig } from "dotenv";
-import type { HardhatUserConfig } from "hardhat/config";
-import type { NetworkUserConfig } from "hardhat/types";
-import { resolve } from "path";
+import * as dotenv from "dotenv";
 
-import "./tasks/accounts";
-import "./tasks/deploy";
+import { HardhatUserConfig, task } from "hardhat/config";
+import "@nomiclabs/hardhat-waffle";
+import "@typechain/hardhat";
+import "@tenderly/hardhat-tenderly";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
+import "hardhat-deploy";
+import "hardhat-deploy-ethers";
+import "hardhat-watcher";
+import "hardhat-docgen";
+import "hardhat-contract-sizer";
 
-dotenvConfig({ path: resolve(__dirname, "./.env") });
-
-// Ensure that we have all the environment variables we need.
-const mnemonic: string | undefined = process.env.MNEMONIC;
-if (!mnemonic) {
-  throw new Error("Please set your MNEMONIC in a .env file");
-}
-
-const infuraApiKey: string | undefined = process.env.INFURA_API_KEY;
-if (!infuraApiKey) {
-  throw new Error("Please set your INFURA_API_KEY in a .env file");
-}
-
-const chainIds = {
-  "arbitrum-mainnet": 42161,
-  avalanche: 43114,
-  bsc: 56,
-  hardhat: 31337,
-  mainnet: 1,
-  "optimism-mainnet": 10,
-  "polygon-mainnet": 137,
-  "polygon-mumbai": 80001,
-  rinkeby: 4,
-};
-
-function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
-  let jsonRpcUrl: string;
-  switch (chain) {
-    case "avalanche":
-      jsonRpcUrl = "https://api.avax.network/ext/bc/C/rpc";
-      break;
-    case "bsc":
-      jsonRpcUrl = "https://bsc-dataseed1.binance.org";
-      break;
-    default:
-      jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
-  }
-  return {
-    accounts: {
-      count: 10,
-      mnemonic,
-      path: "m/44'/60'/0'/0",
-    },
-    chainId: chainIds[chain],
-    url: jsonRpcUrl,
-  };
-}
+dotenv.config();
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
-  etherscan: {
-    apiKey: {
-      arbitrumOne: process.env.ARBISCAN_API_KEY || "",
-      avalanche: process.env.SNOWTRACE_API_KEY || "",
-      bsc: process.env.BSCSCAN_API_KEY || "",
-      mainnet: process.env.ETHERSCAN_API_KEY || "",
-      optimisticEthereum: process.env.OPTIMISM_API_KEY || "",
-      polygon: process.env.POLYGONSCAN_API_KEY || "",
-      polygonMumbai: process.env.POLYGONSCAN_API_KEY || "",
-      rinkeby: process.env.ETHERSCAN_API_KEY || "",
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
     },
   },
-  gasReporter: {
-    currency: "USD",
-    enabled: process.env.REPORT_GAS ? true : false,
-    excludeContracts: [],
-    src: "./contracts",
+  paths: {
+    sources: "./src",
   },
   networks: {
     hardhat: {
-      accounts: {
-        mnemonic,
-      },
-      chainId: chainIds.hardhat,
+      live: false,
+      saveDeployments: true,
+      allowUnlimitedContractSize: true,
+      tags: ["test", "local"],
     },
-    arbitrum: getChainConfig("arbitrum-mainnet"),
-    avalanche: getChainConfig("avalanche"),
-    bsc: getChainConfig("bsc"),
-    mainnet: getChainConfig("mainnet"),
-    optimism: getChainConfig("optimism-mainnet"),
-    "polygon-mainnet": getChainConfig("polygon-mainnet"),
-    "polygon-mumbai": getChainConfig("polygon-mumbai"),
-    rinkeby: getChainConfig("rinkeby"),
-  },
-  paths: {
-    artifacts: "./artifacts",
-    cache: "./cache",
-    sources: "./contracts",
-    tests: "./test",
-  },
-  solidity: {
-    version: "0.8.15",
-    settings: {
-      metadata: {
-        // Not including the metadata hash
-        // https://github.com/paulrberg/hardhat-template/issues/31
-        bytecodeHash: "none",
-      },
-      // Disable the optimizer when debugging
-      // https://hardhat.org/hardhat-network/#solidity-optimizer-support
-      optimizer: {
-        enabled: true,
-        runs: 800,
+    localhost: {
+      url: `http://127.0.0.1:8545`,
+      chainId: 31337,
+      saveDeployments: true,
+      tags: ["test", "local"],
+      companionNetworks: {
+        foreign: "localhost",
       },
     },
+    mainnetFork: {
+      url: `http://127.0.0.1:8545`,
+      chainId: 1,
+      forking: {
+        url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      },
+      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      live: false,
+      saveDeployments: false,
+      tags: ["test", "local"],
+    },
+    arbitrumRinkebyFork: {
+      url: "https://rinkeby.arbitrum.io/rpc",
+      chainId: 421611,
+      forking: {
+        url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      },
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      live: false,
+      saveDeployments: true,
+      tags: ["test", "local"],
+      companionNetworks: {
+        foreign: "rinkeby",
+      },
+    },
+
+    // Home chain ---------------------------------------------------------------------------------
+    arbitrumRinkeby: {
+      chainId: 421611,
+      url: "https://rinkeby.arbitrum.io/rpc",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["staging", "home", "layer2"],
+      companionNetworks: {
+        foreign: "rinkeby",
+      },
+      verify: {
+        etherscan: {
+          apiKey: process.env.ARBISCAN_API_KEY,
+        },
+      },
+    },
+    arbitrum: {
+      chainId: 42161,
+      url: "https://arb1.arbitrum.io/rpc",
+      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["production", "home", "layer2"],
+      companionNetworks: {
+        foreign: "mainnet",
+      },
+      verify: {
+        etherscan: {
+          apiKey: process.env.ARBISCAN_API_KEY,
+        },
+      },
+    },
+    // Foreign chain ---------------------------------------------------------------------------------
+    rinkeby: {
+      chainId: 4,
+      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["staging", "foreign", "layer1"],
+      companionNetworks: {
+        home: "arbitrumRinkeby",
+      },
+    },
+    kovan: {
+      chainId: 42,
+      url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["staging", "foreign", "layer1"],
+    },
+    mainnet: {
+      chainId: 1,
+      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: process.env.MAINNET_PRIVATE_KEY !== undefined ? [process.env.MAINNET_PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["production", "foreign", "layer1"],
+      companionNetworks: {
+        home: "arbitrum",
+      },
+    },
   },
-  typechain: {
-    outDir: "src/types",
-    target: "ethers-v5",
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+    relayer: {
+      default: 1,
+    },
+  },
+  gasReporter: {
+    enabled: process.env.REPORT_GAS !== undefined,
+    currency: "USD",
+  },
+  verify: {
+    etherscan: {
+      apiKey: process.env.ETHERSCAN_API_KEY_FIX,
+    },
+  },
+  watcher: {
+    compilation: {
+      tasks: ["compile"],
+      files: ["./contracts"],
+      verbose: true,
+    },
+    testArbitration: {
+      tasks: [
+        { command: "compile", params: { quiet: true } },
+        { command: "test", params: { noCompile: true, testFiles: ["./test/arbitration/index.ts"] } },
+      ],
+      files: ["./test/**/*", "./src/**/*"],
+    },
+  },
+  docgen: {
+    path: './docs',
+    clear: true,
+    runOnCompile: false,
+  },
+  tenderly: {
+    project: "kleros-v2-local",
+    username: process.env.TENDERLY_USERNAME !== undefined ? process.env.TENDERLY_USERNAME : "",
   },
 };
 
