@@ -71,13 +71,13 @@ contract HarbergerAds is IHarbergerAds {
     ad.lastPaidTimestamp = block.timestamp;
   }
 
-  function fund(uint256 _tokenId, uint256 _value) external {
+  function fund(uint256 _tokenId, uint256 _value) override external {
     Ad storage ad = ads[_tokenId];
     require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
     ad.fund += _value;
   }
 
-  function defund(uint256 _tokenId, uint256 _value) external {
+  function defund(uint256 _tokenId, uint256 _value) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     require(block.timestamp >= ad.valuationChangeTimestamp + cooldownPeriod, "Wait more time");
@@ -102,7 +102,7 @@ contract HarbergerAds is IHarbergerAds {
     }
   }
 
-  function revoke(uint256 _tokenId) external {
+  function revoke(uint256 _tokenId) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     // check available amount
@@ -120,7 +120,7 @@ contract HarbergerAds is IHarbergerAds {
     }
   }
 
-  function changeValuation(uint256 _tokenId, uint256 _valuation) external {
+  function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner");
     if (ad.valuation > _valuation) {
@@ -131,15 +131,24 @@ contract HarbergerAds is IHarbergerAds {
     ad.valuationChangeTimestamp = block.timestamp;
   }
 
-  function setAd(uint256 _tokenId, string calldata _ipfsUri) external {
+  function setAd(uint256 _tokenId, string calldata _ipfsUri) override external {
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner changes ad");
     emit AdSet(_tokenId, _ipfsUri);
   }
 
   function collect(uint256 _tokenId) override external {
-    // TODO
-    revert("NOT IMPLEMENTED");
+    Ad storage ad = ads[_tokenId];
+    uint256 taxes = dueTaxes(_tokenId);
+    if (taxes >= ad.fund) {
+      // there's not enough to pay the owed taxes. pay everything to collector.
+      currency.transfer(collector, ad.fund);
+      // now revoke
+      _revoke(_tokenId);
+    } else {
+      // there's enough to pay the owed taxes. pay only due taxes to collector.
+      _payTax(_tokenId, taxes); // updates ad.fund      
+    }
   }
 
   /// ERC-721 STUFF
