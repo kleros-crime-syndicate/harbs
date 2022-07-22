@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as interfaces from "./interfaces";
+export { Currency__factory } from "./Currency__factory";
 export { HarbergerAds__factory } from "./HarbergerAds__factory";

@@ -1,6 +1,5 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-import { BigNumber } from "ethers";
 
 const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, getChainId } = hre;
@@ -11,15 +10,15 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
   const deployer = (await getNamedAccounts()).deployer ?? (await hre.ethers.getSigners())[0].address;
 
   // TODO: not implemented yet
-  const erc20 = await deploy("ERC20", {
+  const erc20 = await deploy("Currency", {
     from: deployer,
-    args: ["TODO"],
+    args: ["Harberger Ads Currency", "HAC", 18],
     log: true,
   });
 
   const ads = await deploy("HarbergerAds", {
     from: deployer,
-    args: [2000, erc20.address],
+    args: [2000, 100, erc20.address],
     log: true,
   });
 
