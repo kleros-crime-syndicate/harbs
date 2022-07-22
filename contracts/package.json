@@ -17,7 +17,7 @@
     "test": "hardhat test",
     "watch": "hardhat watch",
     "docgen": "hardhat docgen",
-    "publish": "yarn npm publish --access public --tag $(cat package.json | jq .version)"
+    "publish": "yarn npm publish --access public --tag $(cat package.json | jq .version)",
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
   },
   "devDependencies": {
