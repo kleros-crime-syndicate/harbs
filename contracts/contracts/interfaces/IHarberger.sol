@@ -1,9 +1,11 @@
 import "@openzeppelin/contracts/ERC721/IERC721.sol";
 
 interface IHarberger is IERC721 {
-  function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation) external;
-  
-  function collect(uint256 _tokenId) external;
+  function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) external;
+
+  function fund(address _tokenId, uint256 _value) external;
+
+  function defund(address _tokenId, uint256 _value) external;
   
   function revoke(uint256 _tokenId) external;
   
