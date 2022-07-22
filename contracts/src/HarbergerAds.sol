@@ -38,8 +38,10 @@ contract HarbergerAds is IHarbergerAds {
     uint256 amountDue = dueTaxes(_tokenId);
     if (amountDue > ad.fund) {
       // there's not enough to pay. item no longer belongs to original owner.
-      // todo: buy and send offer to collector.
-
+      // send whatever's left to the collector
+      currency.transfer(collector, ad.fund);
+      // buy from collector
+      currency.transferFrom(msg.sender, collector, _offer);
     } else {
       // check if offer is over valuation
       require(ad.valuation <= _offer, "Lowball offer");
@@ -48,7 +50,20 @@ contract HarbergerAds is IHarbergerAds {
       currency.transfer(collector, amountDue);
       // reimburse remainder
       currency.transfer(ad.owner, ad.fund - amountDue);
-      
+
+      // buy the item from previous owner
+      currency.transferFrom(msg.sender, ad.owner, _offer);
+    }
+    // is new fund enough?
+    require(_fund >= minimumFund(_valuation), "Not enough funds");
+    currency.transferFrom(msg.sender, address(this), _fund);
+
+    // set the ad data
+    ad.owner = msg.sender;
+    ad.fund = _fund;
+    ad.valuation = _valuation;
+    ad.valuationChangeTimestamp = block.timestamp;
+    ad.taxDueTimestamp = block.timestamp;
     }
   }
 
@@ -86,6 +101,11 @@ contract HarbergerAds is IHarbergerAds {
   function taxesPerSecond(uint256 _value) view public {
     // figures out dynamically how much is owed per second
     uint256 perYear = _value * taxRate / DIVIDER;
-    return perYear / 31536000;
+    return perYear / 31_536_000; // <-- some tokens will go to zero like this lol
   }
+
+  function minimumFund(uint256 _value) view public {
+    uint256 rate = taxesPerSecond(_value);
+    return rate * 2_628_000;
+  } 
 }
