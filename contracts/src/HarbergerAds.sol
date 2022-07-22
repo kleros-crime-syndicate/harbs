@@ -1,10 +1,14 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IHarbergerAds.sol";
 
-contract HarbergerAds is IHarbergerAds {
+abstract contract HarbergerAds is IHarbergerAds {
+
+  // TODO: implement the IERC721 functions
+
   struct Ad {
     uint256 valuation; // current valuation of the item.
     uint256 valuationChangeTimestamp; // must be set any time valuation changes
@@ -30,12 +34,13 @@ contract HarbergerAds is IHarbergerAds {
     taxRate = _taxRate;
     currency = _currency;
     cooldownPeriod = _cooldownPeriod;
+    collector = msg.sender;
   }
 
   // edge cases:
   // if due taxes cannot be paid, the buyer gets ownership of the item and doesnt have to pay.
 
-  function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) external {
+  function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) override external {
     // check if item has enough funds to pay taxes
     Ad storage ad = ads[_tokenId];
     uint256 amountDue = dueTaxes(_tokenId);
@@ -115,11 +120,11 @@ contract HarbergerAds is IHarbergerAds {
     }
   }
 
-  function changeValuation(uint256 _tokenId, uint256 _valuation) external {
+  function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
 
   }
 
-  function setAd(uint256 _tokenId, string _ipfsUri) external {
+  function setAd(uint256 _tokenId, string calldata _ipfsUri) override external {
 
   }
 
@@ -144,13 +149,13 @@ contract HarbergerAds is IHarbergerAds {
 
   /// VIEW FUNCTIONS
 
-  function dueTaxes(uint256 _tokenId) view public {
+  function dueTaxes(uint256 _tokenId) view public returns (uint256) {
     Ad storage ad = ads[_tokenId];
     uint256 rate = taxesPerSecond(ad.valuation);
     return (rate * (block.timestamp - ad.taxDueTimestamp));
   }
 
-  function taxesPerSecond(uint256 _value) view public {
+  function taxesPerSecond(uint256 _value) view public returns (uint256) {
     // figures out dynamically how much is owed per second
     uint256 perYear = _value * taxRate / DIVIDER;
     return perYear / 31_536_000; // <-- some tokens will go to zero like this lol
