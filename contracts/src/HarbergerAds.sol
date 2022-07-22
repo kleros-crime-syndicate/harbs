@@ -61,7 +61,7 @@ contract HarbergerAds is IHarbergerAds {
       currency.transfer(ad.owner, ad.fund);
 
       // buy the item from previous owner
-      require(currency.transferFrom(msg.sender, ad.owner, _offer), "Bad transfer");
+      require(currency.transferFrom(msg.sender, ad.owner == address(0x0) ? collector : ad.owner, _offer), "Bad transfer");
     }
     // is new fund enough?
     require(_fund >= minimumFund(_valuation), "Not enough funds");
