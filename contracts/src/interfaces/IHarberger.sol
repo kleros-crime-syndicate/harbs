@@ -11,6 +11,8 @@ interface IHarberger is IERC721 {
   function defund(uint256 _tokenId, uint256 _value) external;
   
   function revoke(uint256 _tokenId) external;
+
+  function collect(uint256 _tokenId) external;
   
   function changeValuation(uint256 _tokenId, uint256 _valuation) external;
 }
