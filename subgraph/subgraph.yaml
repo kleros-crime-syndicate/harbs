@@ -15,14 +15,14 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - AdContract
+        - Collection
       abis:
         - name: HarbergerAdsFactory
           file: ./abis/HarbergerAdsFactory.json
       eventHandlers:
-        - event: HarbergerAdsCreated(address,uint256,uint256,uint256,address,address)
-          handler: handleHarbergerAdsCreated
-      file: ./src/harberger-ads-factory.ts
+        - event: CollectionCreated(string,address,uint256,uint256,uint256,address,address)
+          handler: handleCollectionCreated
+      file: ./src/mappings.ts
 templates:
   - kind: ethereum
     name: HarbergerAds
@@ -39,6 +39,14 @@ templates:
         - name: HarbergerAds
           file: ./abis/HarbergerAds.json
       eventHandlers:
+        - event: Transfer(address,address,uint256)
+          handler: handleTransfer
+        - event: ValuationChanged(uint256,uint256)
+          handler: handleValuationChanged
+        - event: AdFundChanged(uint256,uint256)
+          handler: handleAdFundChanged
+        - event: TaxPaid(uint256,uint256)
+          handler: handleTaxPaid
         - event: AdSet(uint256,string)
           handler: handleAdSet
-      file: ./src/harberger-ads.ts
+      file: ./src/mappings.ts

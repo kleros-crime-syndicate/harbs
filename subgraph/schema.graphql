@@ -1,6 +1,31 @@
-type ExampleEntity @entity {
+type Collection @entity {
+  "{contract_address}"
   id: ID!
-  count: BigInt!
-  _address: Bytes! # address
-  _adCount: BigInt! # uint256
+  "Name of the collection"
+  name: String!
+  "How many ads does the collection have"
+  adCount: BigInt!
+  "Tax rate per year"
+  taxRate: BigInt!
+  "Address that receives the taxes"
+  collector: Bytes!
+  "Period of time needed to partially defund or decrease valuation"
+  cooldownPeriod: BigInt!
+  "Address of the ERC-20 token used to value or tax"
+  currency: Bytes!
+}
+
+type Ad @entity {
+  "{token_id}@{contract_address}"
+  id: ID!
+  "Owner of the item, and taxpayer"
+  owner: Bytes!
+  "Current valuation of the item"
+  valuation: BigInt!
+  "Funds allocated to pay for taxes"
+  fund: BigInt!
+  "Last time taxes were paid, used to compute due taxes"
+  lastPaidTimestamp: BigInt!
+  "Next time the valuation will be able to decrease or partially defund"
+  nextValuationTimestamp: BigInt!
 }
