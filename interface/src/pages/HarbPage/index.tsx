@@ -1,3 +1,5 @@
+import { useParams } from "react-router-dom";
+import { BigNumber } from "ethers";
 import OwnerMenu from "./OwnerMenu";
 import BuyerMenu from "./BuyerMenu";
 import CollectorMenu from "./CollectorMenu";
@@ -15,6 +17,7 @@ const InfoItem: React.FC<IInfoItem> = ({ title, value }) => (
 );
 
 const HarbPage: React.FC = () => {
+  const { tokenID, address } = useParams();
   return (
     <div className={`flex flex-col items-center max-w-[1900px] mx-auto gap-16`}>
       <div className="flex items-center w-full justify-center ">
@@ -37,7 +40,7 @@ const HarbPage: React.FC = () => {
       </div>
       <div className="flex flex-col items-center gap-8">
         <OwnerMenu />
-        <BuyerMenu />
+        <BuyerMenu valuation={BigNumber.from(3000)} />
         <CollectorMenu />
       </div>
     </div>
