@@ -1,7 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
-const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
+const deployHarbs: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, getChainId } = hre;
   const { deploy, execute } = deployments;
   const { AddressZero } = hre.ethers.constants;
@@ -64,4 +64,5 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
   );
 };
 
-export default deployArbitration;
+deployHarbs.tags = ["Harbs"];
+export default deployHarbs;

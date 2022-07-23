@@ -7,7 +7,7 @@ import { BigInt, log } from "@graphprotocol/graph-ts";
 
 export function handleCollectionCreated(event: CollectionCreated): void {
   let collection = new Collection(event.params._address.toHexString());
-  collection.adCount = event.params._adCount;
+  collection.adCount = event.params._totalSupply;
   collection.collector = event.params._collector;
   collection.cooldownPeriod = event.params._cooldownPeriod;
   collection.currency = event.params._currency;
