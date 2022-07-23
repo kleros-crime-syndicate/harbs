@@ -51,6 +51,7 @@ const config: HardhatUserConfig = {
       verify: {
         etherscan: {
           apiKey: process.env.ARBISCAN_API_KEY,
+          apiUrl: "https://api-testnet.polygonscan.com/"
         },
       },
     }
