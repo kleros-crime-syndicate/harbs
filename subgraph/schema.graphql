@@ -3,6 +3,16 @@ type Collection @entity {
   id: ID!
   "Name of the collection"
   name: String!
+  "Symbol of the collection"
+  symbol: String!
+  "Token URI of the collection"
+  tokenURI: String!
+  "Width of the ads"
+  width: Int!
+  "Height of the ads"
+  height: Int!
+  "Website URL"
+  website: String!
   "How many ads does the collection have"
   adCount: BigInt!
   "Tax rate per year"
