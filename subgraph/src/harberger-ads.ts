@@ -1,28 +1,9 @@
-import {
-  AdSet,
-  Transfer,
-  ValuationSet,
-  TaxPaid,
-  TokenFunded
-} from "../generated/templates/HarbergerAds/HarbergerAds";
-import { Ad, Collection } from "../generated/schema";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { AdSet, Transfer, ValuationSet, TaxPaid, TokenFunded } from "../generated/templates/HarbergerAds/HarbergerAds";
+import { Ad } from "../generated/schema";
 
 export function handleTransfer(event: Transfer): void {
-  let ad = Ad.load(`${event.params.tokenId}@${event.address}`);
-  let collection = Collection.load(event.address.toHexString()) as Collection;
-
-  if (!ad) {
-    ad = new Ad(`${event.params.tokenId}@${event.address}`);
-    ad.collection = event.address.toHexString();
-    ad.collectionAddress = event.address;
-    ad.uri = "https://nothing.com"; //filler
-    ad.fund = BigInt.fromU32(0);
-    ad.lastPaidTimestamp = event.block.timestamp;
-    ad.nextValuationTimestamp = event.block.timestamp.plus(collection.cooldownPeriod);
-    ad.valuation = BigInt.fromU32(0);
-  }
-
+  let ad = Ad.load(`${event.params.tokenId}@${event.address}`) as Ad;
+  ad.lastPaidTimestamp = event.block.timestamp;
   ad.owner = event.params.to;
   ad.save();
 }
@@ -51,6 +32,6 @@ export function handleTaxPaid(event: TaxPaid): void {
   let ad = Ad.load(`${event.params._tokenId}@${event.address}`) as Ad;
   ad.lastPaidTimestamp = event.block.timestamp;
   ad.fund = ad.fund.minus(event.params._value);
-  
+
   ad.save();
 }
