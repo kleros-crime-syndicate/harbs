@@ -30,11 +30,9 @@ import type {
 export interface HarbergerAdsInterface extends utils.Interface {
   functions: {
     "DIVIDER()": FunctionFragment;
-    "adCount()": FunctionFragment;
     "ads(uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "balances(address)": FunctionFragment;
     "buy(uint256,uint256,uint256,uint256)": FunctionFragment;
     "changeValuation(uint256,uint256)": FunctionFragment;
     "collect(uint256)": FunctionFragment;
@@ -59,17 +57,16 @@ export interface HarbergerAdsInterface extends utils.Interface {
     "taxRate()": FunctionFragment;
     "taxesPerSecond(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "DIVIDER"
-      | "adCount"
       | "ads"
       | "approve"
       | "balanceOf"
-      | "balances"
       | "buy"
       | "changeValuation"
       | "collect"
@@ -94,11 +91,11 @@ export interface HarbergerAdsInterface extends utils.Interface {
       | "taxRate"
       | "taxesPerSecond"
       | "tokenURI"
+      | "totalSupply"
       | "transferFrom"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "DIVIDER", values?: undefined): string;
-  encodeFunctionData(functionFragment: "adCount", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ads",
     values: [PromiseOrValue<BigNumberish>]
@@ -109,10 +106,6 @@ export interface HarbergerAdsInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "balances",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -211,6 +204,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferFrom",
     values: [
       PromiseOrValue<string>,
@@ -220,11 +217,9 @@ export interface HarbergerAdsInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "DIVIDER", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "adCount", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ads", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "balances", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buy", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "changeValuation",
@@ -279,6 +274,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
     data: BytesLike
@@ -423,8 +422,6 @@ export interface HarbergerAds extends BaseContract {
   functions: {
     DIVIDER(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    adCount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     ads(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -445,11 +442,6 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(
-      _owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    balances(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -570,6 +562,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     transferFrom(
       _from: PromiseOrValue<string>,
       _to: PromiseOrValue<string>,
@@ -579,8 +573,6 @@ export interface HarbergerAds extends BaseContract {
   };
 
   DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
-
-  adCount(overrides?: CallOverrides): Promise<BigNumber>;
 
   ads(
     arg0: PromiseOrValue<BigNumberish>,
@@ -602,11 +594,6 @@ export interface HarbergerAds extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(
-    _owner: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  balances(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
@@ -727,6 +714,8 @@ export interface HarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
   transferFrom(
     _from: PromiseOrValue<string>,
     _to: PromiseOrValue<string>,
@@ -736,8 +725,6 @@ export interface HarbergerAds extends BaseContract {
 
   callStatic: {
     DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
-
-    adCount(overrides?: CallOverrides): Promise<BigNumber>;
 
     ads(
       arg0: PromiseOrValue<BigNumberish>,
@@ -759,11 +746,6 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<void>;
 
     balanceOf(
-      _owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    balances(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -884,6 +866,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferFrom(
       _from: PromiseOrValue<string>,
       _to: PromiseOrValue<string>,
@@ -971,8 +955,6 @@ export interface HarbergerAds extends BaseContract {
   estimateGas: {
     DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
 
-    adCount(overrides?: CallOverrides): Promise<BigNumber>;
-
     ads(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -985,11 +967,6 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(
-      _owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    balances(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1110,6 +1087,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferFrom(
       _from: PromiseOrValue<string>,
       _to: PromiseOrValue<string>,
@@ -1120,8 +1099,6 @@ export interface HarbergerAds extends BaseContract {
 
   populateTransaction: {
     DIVIDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    adCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ads(
       arg0: PromiseOrValue<BigNumberish>,
@@ -1135,11 +1112,6 @@ export interface HarbergerAds extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     balanceOf(
-      _owner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    balances(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1259,6 +1231,8 @@ export interface HarbergerAds extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferFrom(
       _from: PromiseOrValue<string>,

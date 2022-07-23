@@ -59,7 +59,7 @@ export interface HarbergerAdsFactoryInterface extends utils.Interface {
 
 export interface CollectionCreatedEventObject {
   _address: string;
-  _adCount: BigNumber;
+  _totalSupply: BigNumber;
   _taxRate: BigNumber;
   _cooldownPeriod: BigNumber;
   _currency: string;
@@ -101,7 +101,7 @@ export interface HarbergerAdsFactory extends BaseContract {
 
   functions: {
     create(
-      _adCount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       _taxRate: PromiseOrValue<BigNumberish>,
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
@@ -114,7 +114,7 @@ export interface HarbergerAdsFactory extends BaseContract {
   };
 
   create(
-    _adCount: PromiseOrValue<BigNumberish>,
+    _totalSupply: PromiseOrValue<BigNumberish>,
     _taxRate: PromiseOrValue<BigNumberish>,
     _cooldownPeriod: PromiseOrValue<BigNumberish>,
     _currency: PromiseOrValue<string>,
@@ -127,7 +127,7 @@ export interface HarbergerAdsFactory extends BaseContract {
 
   callStatic: {
     create(
-      _adCount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       _taxRate: PromiseOrValue<BigNumberish>,
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
@@ -142,7 +142,7 @@ export interface HarbergerAdsFactory extends BaseContract {
   filters: {
     "CollectionCreated(address,uint256,uint256,uint256,address,address)"(
       _address?: null,
-      _adCount?: null,
+      _totalSupply?: null,
       _taxRate?: null,
       _cooldownPeriod?: null,
       _currency?: null,
@@ -150,7 +150,7 @@ export interface HarbergerAdsFactory extends BaseContract {
     ): CollectionCreatedEventFilter;
     CollectionCreated(
       _address?: null,
-      _adCount?: null,
+      _totalSupply?: null,
       _taxRate?: null,
       _cooldownPeriod?: null,
       _currency?: null,
@@ -160,7 +160,7 @@ export interface HarbergerAdsFactory extends BaseContract {
 
   estimateGas: {
     create(
-      _adCount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       _taxRate: PromiseOrValue<BigNumberish>,
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
@@ -174,7 +174,7 @@ export interface HarbergerAdsFactory extends BaseContract {
 
   populateTransaction: {
     create(
-      _adCount: PromiseOrValue<BigNumberish>,
+      _totalSupply: PromiseOrValue<BigNumberish>,
       _taxRate: PromiseOrValue<BigNumberish>,
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,

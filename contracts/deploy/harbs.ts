@@ -26,6 +26,22 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
     erc20Address = "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889";
   }
 
+  // Only for verification on PolygonScan, otherwise the ABI will remain unknown.
+  await deploy("HarbergerAds", {
+    from: deployer,
+    args: [
+      3,
+      2000,
+      100,
+      erc20Address,
+      deployer,
+      "EthCC Hack 2022",
+      "HAC",
+      "ipfs/QmYmLeBs4pZcX2qD9Lup2SxKJGWHFFRpDhC4JDjsgJVXgt/harbs.json",
+    ],
+    log: true,
+  });
+
   const factory = await deploy("HarbergerAdsFactory", {
     from: deployer,
     args: [],
@@ -44,7 +60,7 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
     deployer,
     "EthCC Hack 2022",
     "HAC",
-    "https://ipfs.kleros.io/ipfs/QmYmLeBs4pZcX2qD9Lup2SxKJGWHFFRpDhC4JDjsgJVXgt/harbs.json"
+    "ipfs/QmYmLeBs4pZcX2qD9Lup2SxKJGWHFFRpDhC4JDjsgJVXgt/harbs.json"
   );
 };
 
