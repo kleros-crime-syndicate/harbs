@@ -6,3 +6,4 @@ export type { interfaces };
 export type { Currency } from "./Currency";
 export type { HarbergerAds } from "./HarbergerAds";
 export type { HarbergerAdsFactory } from "./HarbergerAdsFactory";
+export type { HarbergerAdsFull } from "./HarbergerAdsFull";

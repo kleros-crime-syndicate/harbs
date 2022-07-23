@@ -25,50 +25,99 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../common";
+} from "../common";
 
-export interface IHarbergerAdsInterface extends utils.Interface {
+export interface HarbergerAdsFullInterface extends utils.Interface {
   functions: {
+    "DIVIDER()": FunctionFragment;
+    "ads(uint256)": FunctionFragment;
+    "adsBalanceOf(address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "buy(uint256,uint256,uint256,uint256)": FunctionFragment;
     "changeValuation(uint256,uint256)": FunctionFragment;
     "collect(uint256)": FunctionFragment;
+    "collector()": FunctionFragment;
+    "cooldownPeriod()": FunctionFragment;
+    "currency()": FunctionFragment;
     "defund(uint256,uint256)": FunctionFragment;
+    "dueTaxes(uint256)": FunctionFragment;
     "fund(uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "minimumFund(uint256)": FunctionFragment;
+    "name()": FunctionFragment;
+    "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "revoke(uint256)": FunctionFragment;
+    "safeMint(address,string)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setAd(uint256,string)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "taxRate()": FunctionFragment;
+    "taxesPerSecond(uint256)": FunctionFragment;
+    "tokenByIndex(uint256)": FunctionFragment;
+    "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "DIVIDER"
+      | "ads"
+      | "adsBalanceOf"
       | "approve"
       | "balanceOf"
       | "buy"
       | "changeValuation"
       | "collect"
+      | "collector"
+      | "cooldownPeriod"
+      | "currency"
       | "defund"
+      | "dueTaxes"
       | "fund"
       | "getApproved"
       | "isApprovedForAll"
+      | "minimumFund"
+      | "name"
+      | "owner"
       | "ownerOf"
+      | "renounceOwnership"
       | "revoke"
+      | "safeMint"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setAd"
       | "setApprovalForAll"
       | "supportsInterface"
+      | "symbol"
+      | "taxRate"
+      | "taxesPerSecond"
+      | "tokenByIndex"
+      | "tokenOfOwnerByIndex"
+      | "tokenURI"
+      | "totalSupply"
       | "transferFrom"
+      | "transferOwnership"
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "DIVIDER", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "ads",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adsBalanceOf",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -94,9 +143,19 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     functionFragment: "collect",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "collector", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "cooldownPeriod",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "currency", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "defund",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "dueTaxes",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "fund",
@@ -111,12 +170,26 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "minimumFund",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "revoke",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "safeMint",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -147,6 +220,28 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(functionFragment: "taxRate", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "taxesPerSecond",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenByIndex",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenOfOwnerByIndex",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [
@@ -155,7 +250,17 @@ export interface IHarbergerAdsInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [PromiseOrValue<string>]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "DIVIDER", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ads", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "adsBalanceOf",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buy", data: BytesLike): Result;
@@ -164,7 +269,14 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "collector", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "cooldownPeriod",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "currency", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "defund", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "dueTaxes", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "fund", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
@@ -174,8 +286,19 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "minimumFund",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "revoke", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "safeMint", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -193,8 +316,31 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "taxRate", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "taxesPerSecond",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenOfOwnerByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 
@@ -202,6 +348,7 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     "AdSet(uint256,string)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "TaxPaid(uint256,uint256)": EventFragment;
     "TokenBought(uint256,address,uint256)": EventFragment;
     "TokenFunded(uint256,uint256)": EventFragment;
@@ -212,6 +359,7 @@ export interface IHarbergerAdsInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "AdSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TaxPaid"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenBought"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenFunded"): EventFragment;
@@ -250,6 +398,18 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface TaxPaidEventObject {
   _tokenId: BigNumber;
@@ -308,12 +468,12 @@ export type ValuationSetEvent = TypedEvent<
 
 export type ValuationSetEventFilter = TypedEventFilter<ValuationSetEvent>;
 
-export interface IHarbergerAds extends BaseContract {
+export interface HarbergerAdsFull extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IHarbergerAdsInterface;
+  interface: HarbergerAdsFullInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -335,6 +495,26 @@ export interface IHarbergerAds extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    DIVIDER(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    ads(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        owner: string;
+        valuation: BigNumber;
+        fund: BigNumber;
+        lastPaidTimestamp: BigNumber;
+        nextValuationTimestamp: BigNumber;
+      }
+    >;
+
+    adsBalanceOf(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -344,7 +524,7 @@ export interface IHarbergerAds extends BaseContract {
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     buy(
       _tokenId: PromiseOrValue<BigNumberish>,
@@ -365,11 +545,22 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    collector(overrides?: CallOverrides): Promise<[string]>;
+
+    cooldownPeriod(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    currency(overrides?: CallOverrides): Promise<[string]>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    dueTaxes(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     fund(
       _tokenId: PromiseOrValue<BigNumberish>,
@@ -380,7 +571,7 @@ export interface IHarbergerAds extends BaseContract {
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { operator: string }>;
+    ): Promise<[string]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -388,13 +579,32 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[string]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     revoke(
       _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    safeMint(
+      _to: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -415,13 +625,13 @@ export interface IHarbergerAds extends BaseContract {
 
     setAd(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _ipfsUri: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
-      _approved: PromiseOrValue<boolean>,
+      approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -430,13 +640,65 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    taxRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    taxesPerSecond(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenByIndex(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenOfOwnerByIndex(
+      owner: PromiseOrValue<string>,
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
+
+  ads(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      owner: string;
+      valuation: BigNumber;
+      fund: BigNumber;
+      lastPaidTimestamp: BigNumber;
+      nextValuationTimestamp: BigNumber;
+    }
+  >;
+
+  adsBalanceOf(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   approve(
     to: PromiseOrValue<string>,
@@ -468,11 +730,22 @@ export interface IHarbergerAds extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  collector(overrides?: CallOverrides): Promise<string>;
+
+  cooldownPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+
+  currency(overrides?: CallOverrides): Promise<string>;
+
   defund(
     _tokenId: PromiseOrValue<BigNumberish>,
     _value: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  dueTaxes(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   fund(
     _tokenId: PromiseOrValue<BigNumberish>,
@@ -491,13 +764,32 @@ export interface IHarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  minimumFund(
+    _value: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  name(overrides?: CallOverrides): Promise<string>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
   ownerOf(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  renounceOwnership(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   revoke(
     _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  safeMint(
+    _to: PromiseOrValue<string>,
+    _uri: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -518,13 +810,13 @@ export interface IHarbergerAds extends BaseContract {
 
   setAd(
     _tokenId: PromiseOrValue<BigNumberish>,
-    _ipfsUri: PromiseOrValue<string>,
+    _uri: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setApprovalForAll(
     operator: PromiseOrValue<string>,
-    _approved: PromiseOrValue<boolean>,
+    approved: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -533,6 +825,33 @@ export interface IHarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  taxRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+  taxesPerSecond(
+    _value: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenByIndex(
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenOfOwnerByIndex(
+    owner: PromiseOrValue<string>,
+    index: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  tokenURI(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
   transferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -540,7 +859,32 @@ export interface IHarbergerAds extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ads(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        owner: string;
+        valuation: BigNumber;
+        fund: BigNumber;
+        lastPaidTimestamp: BigNumber;
+        nextValuationTimestamp: BigNumber;
+      }
+    >;
+
+    adsBalanceOf(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -571,11 +915,22 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    collector(overrides?: CallOverrides): Promise<string>;
+
+    cooldownPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+
+    currency(overrides?: CallOverrides): Promise<string>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    dueTaxes(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     fund(
       _tokenId: PromiseOrValue<BigNumberish>,
@@ -594,13 +949,30 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<string>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
     revoke(
       _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    safeMint(
+      _to: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -621,13 +993,13 @@ export interface IHarbergerAds extends BaseContract {
 
     setAd(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _ipfsUri: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
-      _approved: PromiseOrValue<boolean>,
+      approved: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -636,10 +1008,42 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    taxRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    taxesPerSecond(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenByIndex(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenOfOwnerByIndex(
+      owner: PromiseOrValue<string>,
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -669,6 +1073,15 @@ export interface IHarbergerAds extends BaseContract {
       operator?: PromiseOrValue<string> | null,
       approved?: null
     ): ApprovalForAllEventFilter;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
 
     "TaxPaid(uint256,uint256)"(
       _tokenId?: PromiseOrValue<BigNumberish> | null,
@@ -721,6 +1134,18 @@ export interface IHarbergerAds extends BaseContract {
   };
 
   estimateGas: {
+    DIVIDER(overrides?: CallOverrides): Promise<BigNumber>;
+
+    ads(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    adsBalanceOf(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -751,10 +1176,21 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    collector(overrides?: CallOverrides): Promise<BigNumber>;
+
+    cooldownPeriod(overrides?: CallOverrides): Promise<BigNumber>;
+
+    currency(overrides?: CallOverrides): Promise<BigNumber>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    dueTaxes(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     fund(
@@ -774,13 +1210,32 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     revoke(
       _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    safeMint(
+      _to: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -801,13 +1256,13 @@ export interface IHarbergerAds extends BaseContract {
 
     setAd(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _ipfsUri: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
-      _approved: PromiseOrValue<boolean>,
+      approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -816,15 +1271,59 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    taxRate(overrides?: CallOverrides): Promise<BigNumber>;
+
+    taxesPerSecond(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenByIndex(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenOfOwnerByIndex(
+      owner: PromiseOrValue<string>,
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    DIVIDER(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    ads(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    adsBalanceOf(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -855,10 +1354,21 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    collector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    cooldownPeriod(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    currency(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     defund(
       _tokenId: PromiseOrValue<BigNumberish>,
       _value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    dueTaxes(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     fund(
@@ -878,13 +1388,32 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    minimumFund(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ownerOf(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     revoke(
       _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    safeMint(
+      _to: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -905,13 +1434,13 @@ export interface IHarbergerAds extends BaseContract {
 
     setAd(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _ipfsUri: PromiseOrValue<string>,
+      _uri: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: PromiseOrValue<string>,
-      _approved: PromiseOrValue<boolean>,
+      approved: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -920,10 +1449,42 @@ export interface IHarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    taxRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    taxesPerSecond(
+      _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenByIndex(
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenOfOwnerByIndex(
+      owner: PromiseOrValue<string>,
+      index: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     transferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
