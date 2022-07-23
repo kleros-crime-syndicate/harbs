@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://harbs.netlify.app">
-    <img alt="FIXME" src="" width="128">
+    <img alt="FIXME" src="https://raw.githubusercontent.com/kleros-crime-syndicate/harbs/master/interface/src/assets/harbs.svg" width="256">
   </a>
 </p>
 
 <p align="center">
-  <b style="font-size: 32px;">Harbs</b>
+  <i style="font-size: 28px;"> Harbringer Ads</i>
 </p>
 
 <p align="center">
