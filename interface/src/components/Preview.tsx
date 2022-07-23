@@ -13,7 +13,7 @@ const Preview: React.FC<PreviewProps> = ({ trigger, children }) => (
         className="fixed
                    top-0 left-0 h-screen z-10 w-full
                    flex justify-center items-center
-                   bg-slate-400/50"
+                   bg-slate-800/50 backdrop-blur-md"
         onClick={close}
       >
         {children}

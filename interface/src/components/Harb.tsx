@@ -43,7 +43,7 @@ const Harb: React.FC<IHarb> = ({ valuation, address }) => {
         `}
         /> */}
         <p className="leading-5 p-0 text-white text-lg">Valuation</p>
-        <p className="leading-5 text-white text-3xl">{valuation} ETH</p>
+        <p className="leading-5 text-white text-3xl">{valuation} MATIC</p>
       </div>
     </div>
   );

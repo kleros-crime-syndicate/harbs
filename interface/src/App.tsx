@@ -2,11 +2,7 @@ import React from "react";
 import "./style.pcss";
 import { getSdk } from "generated/graphql";
 import { GraphQLClient } from "graphql-request";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "components/Layout";
 import Marketplace from "pages/Marketplace";
 import MyAccount from "pages/MyAccount";
@@ -16,7 +12,6 @@ import HarbPage from "pages/HarbPage";
 const api = getSdk(new GraphQLClient("https://thegraph"));
 
 const App: React.FC = () => {
-
   return (
     <BrowserRouter>
       <Routes>

@@ -1,0 +1,12 @@
+query ads {
+  ads {
+    id
+    owner
+    uri
+    valuation
+    collection {
+      name
+      symbol
+    }
+  }
+}
