@@ -1,7 +1,7 @@
 import { CollectionCreated } from "../generated/HarbergerAdsFactory/HarbergerAdsFactory";
 import { HarbergerAds } from "../generated/templates/HarbergerAds/HarbergerAds";
 import { Ad, Collection } from "../generated/schema";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export function handleCollectionCreated(event: CollectionCreated): void {
   let collection = new Collection(event.params._address.toHexString());
@@ -21,6 +21,7 @@ export function handleCollectionCreated(event: CollectionCreated): void {
     let ad = new Ad(`${i}@${event.params._address}`);
     ad.collection = collection.id;
     ad.collectionAddress = event.params._address;
+    ad.owner = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
     ad.save();
   }
 }

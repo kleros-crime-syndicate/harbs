@@ -157,6 +157,8 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
       // to decrease valuation, you need to pass the period
       require(block.timestamp >= ad.nextValuationTimestamp, "Too soon to decrease");
     }
+    collect(_tokenId); // covers edge cases
+  
     ad.valuation = _valuation;
     ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
 
@@ -171,7 +173,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
     emit AdSet(_tokenId, _uri);
   }
 
-  function collect(uint256 _tokenId) override external {
+  function collect(uint256 _tokenId) override public {
     require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     uint256 taxes = dueTaxes(_tokenId);

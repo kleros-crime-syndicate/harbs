@@ -8,7 +8,7 @@ dataSources:
     name: HarbergerAdsFactory
     network: mumbai
     source:
-      address: "0x300CbF0829762FeDc90287D08aeDf261EE6ED8eB"
+      address: "0x0E87e22a715C624871E39F2c6A45173C0Da1F57C"
       startBlock: 27301382
       abi: HarbergerAdsFactory
     mapping:
