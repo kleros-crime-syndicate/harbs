@@ -1,0 +1,44 @@
+specVersion: 0.0.4
+description: Harbs Ads
+repository: https://github.com/kleros-crime-sydndicate/harbs
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: HarbergerAdsFactory
+    network: mumbai
+    source:
+      address: "0x58C5E93FcBc6b001944Fd44B2820fE58A753Bb71"
+      abi: HarbergerAdsFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - AdContract
+      abis:
+        - name: HarbergerAdsFactory
+          file: ./abis/HarbergerAdsFactory.json
+      eventHandlers:
+        - event: HarbergerAdsCreated(address,uint256,uint256,uint256,address,address)
+          handler: handleHarbergerAdsCreated
+      file: ./src/harberger-ads-factory.ts
+templates:
+  - kind: ethereum
+    name: HarbergerAds
+    network: mumbai
+    source:
+      abi: HarbergerAds
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Ad
+      abis:
+        - name: HarbergerAds
+          file: ./abis/HarbergerAds.json
+      eventHandlers:
+        - event: AdSet(uint256,string)
+          handler: handleAdSet
+      file: ./src/harberger-ads.ts
