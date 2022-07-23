@@ -20,6 +20,8 @@ type Ad @entity {
   id: ID!
   "Owner of the item, and taxpayer"
   owner: Bytes!
+  "Uri of the item"
+  uri: String!
   "Current valuation of the item"
   valuation: BigInt!
   "Funds allocated to pay for taxes"

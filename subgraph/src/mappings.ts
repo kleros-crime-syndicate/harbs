@@ -1,45 +1,56 @@
-import { BigInt } from "@graphprotocol/graph-ts";
-import { HarbergerAdsFactory, HarbergerAdsCreated } from "../generated/HarbergerAdsFactory/HarbergerAdsFactory";
-import { ExampleEntity } from "../generated/schema";
+import { CollectionCreated } from "../generated/HarbergerAdsFactory/HarbergerAdsFactory";
+import {
+  AdFundChanged,
+  AdSet,
+  Transfer,
+  ValuationChanged,
+  TaxPaid,
+} from "../generated/templates/HarbergerAds/HarbergerAds";
+import { Ad, Collection } from "../generated/schema";
 
-export function handleHarbergerAdsCreated(event: HarbergerAdsCreated): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex());
+export function handleCollectionCreated(event: CollectionCreated): void {
+  let collection = new Collection(event.params.contractAddress.toHex());
+  collection.adCount = event.params.adCount;
+  collection.collector = event.params.collector;
+  collection.cooldownPeriod = event.params.cooldownPeriod;
+  collection.currency = event.params.currency;
+  collection.name = event.params.name;
+  collection.taxRate = event.params.taxRate;
+  collection.save();
+}
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex());
+export function handleTransfer(event: Transfer): void {
+  let ad = Ad.load(event.params.tokenId);
 
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0);
+  if (!ad) {
+    ad = new Ad(event.params.tokenId);
   }
 
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1);
+  ad.owner = event.params.to;
+  ad.save();
+}
 
-  // Entity fields can be set based on event parameters
-  entity._address = event.params._address;
-  entity._adCount = event.params._adCount;
+export function handleAdSet(event: AdSet): void {
+  let ad = Ad.load(event.params.tokenId);
+  ad.uri = event.params.uri;
+  ad.save();
+}
 
-  // Entities can be written to the store with `.save()`
-  entity.save();
+export function handleAdFundChanged(event: AdFundChanged): void {
+  let ad = Ad.load(event.params.tokenId);
+  ad.fund = event.params.value;
+  ad.save();
+}
 
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
+export function handleValuationChanged(event: ValuationChanged): void {
+  let ad = Ad.load(event.params.tokenId);
+  ad.valuation = event.params.valuation;
+  // ad.nextValuationTimestamp
+  ad.save();
+}
 
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // None
+export function handleTaxPaid(event: TaxPaid): void {
+  let ad = Ad.load(event.params.tokenId);
+  // ad.lastPaidTimestamp
+  ad.save();
 }

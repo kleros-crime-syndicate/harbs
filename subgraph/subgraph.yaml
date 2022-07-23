@@ -20,7 +20,7 @@ dataSources:
         - name: HarbergerAdsFactory
           file: ./abis/HarbergerAdsFactory.json
       eventHandlers:
-        - event: CollectionCreated(string,address,uint256,uint256,uint256,address,address)
+        - event: CollectionCreated(indexed string,address,uint256,uint256,uint256,address,address)
           handler: handleCollectionCreated
       file: ./src/mappings.ts
 templates:
@@ -39,7 +39,7 @@ templates:
         - name: HarbergerAds
           file: ./abis/HarbergerAds.json
       eventHandlers:
-        - event: Transfer(address,address,uint256)
+        - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: ValuationChanged(uint256,uint256)
           handler: handleValuationChanged
