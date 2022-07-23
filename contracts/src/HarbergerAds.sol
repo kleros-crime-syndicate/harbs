@@ -14,7 +14,10 @@ contract HarbergerAds is IHarbergerAds {
     uint256 nextValuationTimestamp; // must be set any time valuation changes
   }
 
-  event AdSet(uint256 _tokenId, string _uri);
+  event AdSet(uint256 tokenId, string uri);
+  event ValuationChanged(uint256 tokenId, uint256 valuation);
+  event AdFundChanged(uint256 tokenId, uint256 value);
+  event TaxPaid(uint256 tokenId, uint256 value);
 
   uint256 immutable public taxRate; // rate times divider, per year.
   uint256 constant public DIVIDER = 10_000;
@@ -41,10 +44,12 @@ contract HarbergerAds is IHarbergerAds {
   // if due taxes cannot be paid, the buyer gets ownership of the item and doesnt have to pay.
 
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) override external {
-    require(_tokenId < adCount, "Not existing");
-    // check if item has enough funds to pay taxes
     Ad storage ad = ads[_tokenId];
+    require(_tokenId < adCount, "Not existing");
+    require(ad.owner != msg.sender, "Can't buy your own ad");
+    // check if item has enough funds to pay taxes
     uint256 amountDue = dueTaxes(_tokenId);
+    address oldOwner = ad.owner;
     if (amountDue > ad.fund) {
       // there's not enough to pay. item no longer belongs to original owner.
       // send whatever's left to the collector
@@ -73,13 +78,20 @@ contract HarbergerAds is IHarbergerAds {
     ad.valuation = _valuation;
     ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
     ad.lastPaidTimestamp = block.timestamp;
+
+    emit Transfer(oldOwner, msg.sender, _tokenId);
+    emit ValuationChanged(_tokenId, _valuation);
+    emit AdFundChanged(_tokenId, _fund);
   }
 
   function fund(uint256 _tokenId, uint256 _value) override external {
     require(_tokenId < adCount, "Not existing");
     Ad storage ad = ads[_tokenId];
+
     require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
     ad.fund += _value;
+
+    emit AdFundChanged(_tokenId, ad.fund);
   }
 
   function defund(uint256 _tokenId, uint256 _value) override external {
@@ -95,6 +107,7 @@ contract HarbergerAds is IHarbergerAds {
       if (_value < ad.fund) {
         ad.fund -= _value;
         currency.transfer(ad.owner, _value);
+        emit AdFundChanged(_tokenId, ad.fund);
       } else {
         // defund all available, but revoke the item too.
         currency.transfer(ad.owner, ad.fund);
@@ -137,12 +150,15 @@ contract HarbergerAds is IHarbergerAds {
     }
     ad.valuation = _valuation;
     ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
+
+    emit ValuationChanged(_tokenId, _valuation);
   }
 
   function setAd(uint256 _tokenId, string calldata _uri) override external {
     require(_tokenId < adCount, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner changes ad");
+
     emit AdSet(_tokenId, _uri);
   }
 
@@ -210,11 +226,14 @@ contract HarbergerAds is IHarbergerAds {
   function _revoke(uint256 _tokenId) internal {
     // revokes the item.
     Ad storage ad = ads[_tokenId];
+    address oldOwner = ad.owner;
     ad.fund = 0;
-    ad.owner = address(0);
-    // ad.lastPaidTimestamp doesn't matter.
+    ad.owner = collector;
     ad.valuation = 0;
-    // ad.valuationChangeTimestamp doesn't matter.
+
+    emit ValuationChanged(_tokenId, 0);
+    emit AdFundChanged(_tokenId, 0);
+    emit Transfer(oldOwner, collector, _tokenId);
   }
 
   function _payTax(uint256 _tokenId, uint256 _amount) internal {
@@ -222,6 +241,8 @@ contract HarbergerAds is IHarbergerAds {
     currency.transfer(collector, _amount);
     ad.fund -= _amount;
     ad.lastPaidTimestamp = block.timestamp;
+
+    emit TaxPaid(_tokenId, _amount);
   }
 
   /// VIEW FUNCTIONS
