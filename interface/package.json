@@ -55,6 +55,7 @@
     "axios": "^0.27.2",
     "classnames": "^2.3.1",
     "dotenv": "^16.0.0",
+    "formik": "^2.2.9",
     "graphql": "^16.4.0",
     "graphql-request": "^4.2.0",
     "graphql-tag": "^2.12.6",
