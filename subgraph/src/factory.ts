@@ -18,10 +18,15 @@ export function handleCollectionCreated(event: CollectionCreated): void {
   collection.save();
 
   for (let i = 0; i < event.params._totalSupply.toI32(); i++) {
-    let ad = new Ad(`${i}@${event.params._address}`);
+    let ad = new Ad(`${i}@${collection.id}`);
     ad.collection = collection.id;
     ad.collectionAddress = event.params._address;
     ad.owner = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
+    ad.uri = "undefined";
+    ad.valuation = BigInt.fromU32(0);
+    ad.fund = BigInt.fromU32(0);
+    ad.lastPaidTimestamp = BigInt.fromU32(0);
+    ad.nextValuationTimestamp = BigInt.fromU32(0);
     ad.save();
   }
 }
