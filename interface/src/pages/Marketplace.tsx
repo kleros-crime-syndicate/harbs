@@ -13,7 +13,7 @@ const Marketplace: React.FC = () => (
       ml-auto
       mr-auto
     `}>
-      {[1,2,3,4].map(() => <Harb valuation={3000} />)}
+      {[1,2,3,4].map(() => <Harb valuation={3000} address={"0x09870969898576587498768769"} />)}
     </div>
   </>
 );

@@ -1,19 +1,26 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IHarb {
-  valuation: number
+  valuation: number;
+  address: string;
 }
 
-const Harb: React.FC<IHarb> = ({ valuation }) => {
+const Harb: React.FC<IHarb> = ({ valuation, address }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className={`
+    <div
+      className={`
       w-full
-      pb-[100%]
+      pb-[50%]
       bg-red-600
       relative
       hover:cursor-pointer
-    `}>
-      <div className={`
+    `}
+      onClick={() => navigate("/" + address)}
+    >
+      <div
+        className={`
         absolute
         inset-x-0
         bottom-0
@@ -21,17 +28,22 @@ const Harb: React.FC<IHarb> = ({ valuation }) => {
         p-4
         flex
         justify-between
-      `}>
-        <p className={`
+      `}
+      >
+        <p
+          className={`
           text-white
           text-2xl
-        `}>
+        `}
+        >
           Valuation:
         </p>
-        <p className={`
+        <p
+          className={`
           text-white
           text-2xl
-        `}>
+        `}
+        >
           {valuation} ETH
         </p>
       </div>
