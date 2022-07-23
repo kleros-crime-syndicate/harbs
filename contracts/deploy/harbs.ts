@@ -23,7 +23,7 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
     waitConfirmations: 1
   })
 
-  await execute("HarbergerAdsFactory", {from: deployer, log: true}, "create", [3, 2000, 100, erc20.address, deployer])
+  await execute("HarbergerAdsFactory", {from: deployer, log: true}, "create", 3, 2000, 100, erc20.address, deployer)
 
 };
 
