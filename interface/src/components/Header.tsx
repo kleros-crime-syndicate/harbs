@@ -25,7 +25,7 @@ const Header: React.FC = () => {
       className={`
     sticky
     top-0
-    z-50
+    z-30
     w-full
     py-4
     px-8

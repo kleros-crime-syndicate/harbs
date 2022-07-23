@@ -63,6 +63,7 @@
     "postcss-import": "^14.1.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-dropzone": "^14.2.2",
     "react-map-gl": "^7.0.15",
     "react-router-dom": "^6.3.0",
     "reactjs-popup": "^2.0.5",
