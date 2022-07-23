@@ -10,6 +10,7 @@ import {
 import Layout from "components/Layout";
 import Marketplace from "pages/Marketplace";
 import MyAccount from "pages/MyAccount";
+import NewCollection from "pages/NewCollection";
 
 const api = getSdk(new GraphQLClient("https://thegraph"));
 
@@ -21,7 +22,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Layout />}>
           <Route path="marketplace" element={<Marketplace />} />
           <Route path="account" element={<MyAccount />} />
-          <Route path="new-collection" element={<div></div>} />
+          <Route path="new-collection" element={<NewCollection />} />
         </Route>
       </Routes>
     </BrowserRouter>
