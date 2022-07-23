@@ -1,6 +1,6 @@
 {
-  "name": "harbs-ads-mumbai",
-  "license": "UNLICENSED",
+  "name": "harbs-subgraph",
+  "license": "MIT",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

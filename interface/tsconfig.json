@@ -11,6 +11,7 @@
         "jsx": "react-jsx",
         "moduleResolution": "node",
         "rootDir": "src",
+        "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
