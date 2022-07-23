@@ -1,21 +1,25 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IHarb {
   valuation: number;
+  address: string;
 }
 
-const Harb: React.FC<IHarb> = ({ valuation }) => {
+const Harb: React.FC<IHarb> = ({ valuation, address }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`
       w-full
-      pb-[100%]
+      pb-[50%]
       bg-red-600
       relative
       hover:cursor-pointer
       hover:scale-110 hover:z-10 hover:shadow-xl
       transition duration-150 ease-out
     `}
+      onClick={() => navigate("/" + address)}
     >
       <div
         className={`
