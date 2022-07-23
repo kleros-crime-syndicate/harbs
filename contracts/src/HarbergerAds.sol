@@ -14,11 +14,6 @@ contract HarbergerAds is IHarbergerAds {
     uint256 nextValuationTimestamp; // must be set any time valuation changes
   }
 
-  event AdSet(uint256 tokenId, string uri);
-  event ValuationChanged(uint256 tokenId, uint256 valuation);
-  event AdFundChanged(uint256 tokenId, uint256 value);
-  event TaxPaid(uint256 tokenId, uint256 value);
-
   uint256 immutable public taxRate; // rate times divider, per year.
   uint256 constant public DIVIDER = 10_000;
 
@@ -31,6 +26,11 @@ contract HarbergerAds is IHarbergerAds {
 
   mapping(uint256 => Ad) public ads;
   mapping(address => uint256) public balances;
+
+  event AdSet(uint256 tokenId, string uri);
+  event ValuationChanged(uint256 tokenId, uint256 valuation);
+  event AdFundChanged(uint256 tokenId, uint256 value);
+  event TaxPaid(uint256 tokenId, uint256 value);
 
   constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector) {
     adCount = _adCount;
