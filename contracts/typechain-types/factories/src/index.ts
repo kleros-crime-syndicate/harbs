@@ -4,3 +4,4 @@
 export * as interfaces from "./interfaces";
 export { Currency__factory } from "./Currency__factory";
 export { HarbergerAds__factory } from "./HarbergerAds__factory";
+export { HarbergerAdsFactory__factory } from "./HarbergerAdsFactory__factory";

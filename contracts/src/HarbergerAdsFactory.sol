@@ -5,21 +5,18 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./HarbergerAds.sol";
 
 contract HarbergerAdsFactory {
-  uint256 public count;
-  mapping(uint256 => HarbergerAds) public harbergerAdsContracts;
-
+  
   event HarbergerAdsCreated(
-    uint256 _contractId,
     HarbergerAds _address,
-    uint256 _count,
+    uint256 _adCount,
     uint256 _taxRate,
     uint256 _cooldownPeriod,
-    IERC20 _currency
+    IERC20 _currency,
+    address _collector
   );
 
-  function create(uint256 _count, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency) public {
-    HarbergerAds harbergerAdsContract = new HarbergerAds(_count, _taxRate, _cooldownPeriod, _currency);
-    harbergerAdsContracts[++count] = harbergerAdsContract;
-    emit HarbergerAdsCreated(count, harbergerAdsContract, _count, _taxRate, _cooldownPeriod, _currency);
+  function create(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector) public {
+    HarbergerAds harbergerAdsContract = new HarbergerAds(_adCount, _taxRate, _cooldownPeriod, _currency, _collector);
+    emit HarbergerAdsCreated(harbergerAdsContract, _adCount, _taxRate, _cooldownPeriod, _currency, _collector);
   }
 }

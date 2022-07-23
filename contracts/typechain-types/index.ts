@@ -20,6 +20,8 @@ export type { Currency } from "./src/Currency";
 export { Currency__factory } from "./factories/src/Currency__factory";
 export type { HarbergerAds } from "./src/HarbergerAds";
 export { HarbergerAds__factory } from "./factories/src/HarbergerAds__factory";
+export type { HarbergerAdsFactory } from "./src/HarbergerAdsFactory";
+export { HarbergerAdsFactory__factory } from "./factories/src/HarbergerAdsFactory__factory";
 export type { IHarberger } from "./src/interfaces/IHarberger";
 export { IHarberger__factory } from "./factories/src/interfaces/IHarberger__factory";
 export type { IHarbergerAds } from "./src/interfaces/IHarbergerAds";
