@@ -3,9 +3,10 @@ pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "./interfaces/IHarbergerAds.sol";
 
-contract HarbergerAds is IHarbergerAds {
+contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   struct Ad {
     address owner;
     uint256 valuation; // current valuation of the item.
@@ -27,14 +28,22 @@ contract HarbergerAds is IHarbergerAds {
   mapping(uint256 => Ad) public ads;
   mapping(address => uint256) public balances;
 
+  // Metadata stuff
+  string internal globalTokenURI;
+  string internal storedSymbol;
+  string internal storedName;
+
   event AdSet(uint256 tokenId, string uri);
 
-  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector) {
+  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _tokenURI, string memory _name, string memory _symbol) {
     adCount = _adCount;
     taxRate = _taxRate;
     currency = _currency;
     cooldownPeriod = _cooldownPeriod;
     collector = _collector;
+    globalTokenURI = _tokenURI;
+    storedSymbol = _symbol;
+    storedSymbol = _name;
   }
 
   // edge cases:
@@ -210,6 +219,21 @@ contract HarbergerAds is IHarbergerAds {
 
   function isApprovedForAll(address owner, address operator) pure override external returns (bool) {
     revert();
+  }
+
+  // IERC721Metadata
+
+  function tokenURI(uint256 tokenId) external view returns (string memory) {
+    if (tokenId < adCount) return globalTokenURI;
+    return ""; // does not exist
+  }
+
+  function name() external view returns (string memory) {
+    return storedName;
+  }
+
+  function symbol() external view returns (string memory) {
+    return storedSymbol;
   }
 
   /// IERC165 STUFF
