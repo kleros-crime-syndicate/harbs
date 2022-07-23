@@ -35,7 +35,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
 
   event AdSet(uint256 tokenId, string uri);
 
-  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _tokenURI, string memory _name, string memory _symbol) {
+  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _name, string memory _symbol, string memory _tokenURI) {
     adCount = _adCount;
     taxRate = _taxRate;
     currency = _currency;
