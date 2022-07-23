@@ -29,7 +29,7 @@ import type {
 
 export interface HarbergerAdsFactoryInterface extends utils.Interface {
   functions: {
-    "create(uint256,uint256,uint256,address,address)": FunctionFragment;
+    "create(uint256,uint256,uint256,address,address,string)": FunctionFragment;
   };
 
   getFunction(nameOrSignatureOrTopic: "create"): FunctionFragment;
@@ -41,6 +41,7 @@ export interface HarbergerAdsFactoryInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -48,13 +49,14 @@ export interface HarbergerAdsFactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
 
   events: {
-    "HarbergerAdsCreated(address,uint256,uint256,uint256,address,address)": EventFragment;
+    "HarbergerAdsCreated(string,address,uint256,uint256,uint256,address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "HarbergerAdsCreated"): EventFragment;
 }
 
 export interface HarbergerAdsCreatedEventObject {
+  _name: string;
   _address: string;
   _adCount: BigNumber;
   _taxRate: BigNumber;
@@ -63,7 +65,7 @@ export interface HarbergerAdsCreatedEventObject {
   _collector: string;
 }
 export type HarbergerAdsCreatedEvent = TypedEvent<
-  [string, BigNumber, BigNumber, BigNumber, string, string],
+  [string, string, BigNumber, BigNumber, BigNumber, string, string],
   HarbergerAdsCreatedEventObject
 >;
 
@@ -103,6 +105,7 @@ export interface HarbergerAdsFactory extends BaseContract {
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
+      _name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -113,6 +116,7 @@ export interface HarbergerAdsFactory extends BaseContract {
     _cooldownPeriod: PromiseOrValue<BigNumberish>,
     _currency: PromiseOrValue<string>,
     _collector: PromiseOrValue<string>,
+    _name: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -123,12 +127,14 @@ export interface HarbergerAdsFactory extends BaseContract {
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
+      _name: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    "HarbergerAdsCreated(address,uint256,uint256,uint256,address,address)"(
+    "HarbergerAdsCreated(string,address,uint256,uint256,uint256,address,address)"(
+      _name?: PromiseOrValue<string> | null,
       _address?: null,
       _adCount?: null,
       _taxRate?: null,
@@ -137,6 +143,7 @@ export interface HarbergerAdsFactory extends BaseContract {
       _collector?: null
     ): HarbergerAdsCreatedEventFilter;
     HarbergerAdsCreated(
+      _name?: PromiseOrValue<string> | null,
       _address?: null,
       _adCount?: null,
       _taxRate?: null,
@@ -153,6 +160,7 @@ export interface HarbergerAdsFactory extends BaseContract {
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
+      _name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -164,6 +172,7 @@ export interface HarbergerAdsFactory extends BaseContract {
       _cooldownPeriod: PromiseOrValue<BigNumberish>,
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
+      _name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
