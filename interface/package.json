@@ -72,7 +72,8 @@
     "dev": "parcel public/index.html --open --public-url /",
     "build": "graphql-codegen --config codegen.yml & parcel build public/index.html --public-url /",
     "start": "parcel dist/index.html --open --public-url /",
-    "gen": "graphql-codegen --config codegen.yml",
+    "gen": "typechain --target ethers-v5 --out-dir src/generated/contracts ../contracts/deployments/mumbai/**.json",
+    "gql": "graphql-codegen --config codegen.yml",
     "tsc": "tsc --noEmit && eslint"
   }
 }
