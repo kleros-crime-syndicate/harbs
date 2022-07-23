@@ -16,7 +16,8 @@ const Harb: React.FC<IHarb> = ({ valuation, address }) => {
       bg-red-600
       relative
       hover:cursor-pointer
-      hover:scale-110 hover:z-10 hover:shadow-xl
+      hover:-translate-y-2
+      hover:scale-105 hover:z-10 hover:shadow-xl
       transition duration-150 ease-out
     `}
       onClick={() => navigate("/" + address)}
@@ -28,6 +29,7 @@ const Harb: React.FC<IHarb> = ({ valuation, address }) => {
         bottom-0
         p-4
         flex
+        flex-col
         bg-stone-800/70
         justify-between
         `}
@@ -40,8 +42,8 @@ const Harb: React.FC<IHarb> = ({ valuation, address }) => {
           blur-sm
         `}
         /> */}
-        <p className="text-white text-2xl">Valuation:</p>
-        <p className="text-white text-2xl">{valuation} ETH</p>
+        <p className="leading-5 p-0 text-white text-lg">Valuation</p>
+        <p className="leading-5 text-white text-3xl">{valuation} ETH</p>
       </div>
     </div>
   );

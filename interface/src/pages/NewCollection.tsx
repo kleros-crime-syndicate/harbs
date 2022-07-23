@@ -88,7 +88,7 @@ const NewCollection = () => {
         </div>
         {photoUri && (
           <Preview
-            trigger={<img className="max-w-3xl z-50 cursor-pointer border-8 border-theme shadow-lg" src={photoUri} />}
+            trigger={<img className="max-w-3xl cursor-pointer border-8 border-theme shadow-lg" src={photoUri} />}
           >
             <img src={photoUri} />
           </Preview>

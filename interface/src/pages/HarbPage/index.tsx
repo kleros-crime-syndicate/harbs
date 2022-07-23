@@ -9,8 +9,8 @@ interface IInfoItem {
 
 const InfoItem: React.FC<IInfoItem> = ({ title, value }) => (
   <>
-    <label className="text-right">{title}:</label>
-    <label>{value}</label>
+    <label className="text-right">{title}</label>
+    <label className="text-left text-3xl">{value}</label>
   </>
 );
 
@@ -25,9 +25,8 @@ const HarbPage: React.FC = () => {
             bg-red-600
             flex-none
           `}
-        >
-        </div>
-        <div className={`grid grid-cols-2 items-center gap-2`}>
+        />
+        <div className={`grid grid-cols-2 items-end gap-2`}>
           <InfoItem title={"External URL"} value={"htts://asfasdfasdfasdf"} />
           <InfoItem title={"Owner"} value={"0x98787647664487658747654876"} />
           <InfoItem title={"Collector"} value={"0x98787647664487658747654876"} />
@@ -36,10 +35,8 @@ const HarbPage: React.FC = () => {
           <InfoItem title={"Runaway"} value={"29 days"} />
         </div>
       </div>
-      <div>
-        <OwnerMenu />
-      </div>
       <div className="flex flex-col items-center gap-8">
+        <OwnerMenu />
         <BuyerMenu />
         <CollectorMenu />
       </div>
