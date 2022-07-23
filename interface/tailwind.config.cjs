@@ -4,9 +4,11 @@ module.exports = {
   content: ["./src/**/*.{ts,tsx}", "./public/**/*.html"],
   theme: {
     extend: {
-      colors: {},
-      fontSize: {},
-      fontFamily: {},
+      colors: {
+        "theme-lightish": "#C61AFF",
+        theme: "#AC00E6",
+        "theme-darkish": "#8600B3",
+      },
       keyframes: {},
     },
   },

@@ -43,7 +43,7 @@ const config: HardhatUserConfig = {
 
     mumbai: {
       chainId: 80001,
-      url: "https://matic-mumbai.chainstacklabs.com",
+      url: "https://rpc.ankr.com/polygon_mumbai",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       live: true,
       saveDeployments: true,
