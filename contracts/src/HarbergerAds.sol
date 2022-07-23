@@ -78,6 +78,8 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
     require(_fund >= minimumFund(_valuation), "Not enough funds");
     require(currency.transferFrom(msg.sender, address(this), _fund), "Bad transfer");
 
+    if (ad.owner != address(0)) balanceOf[ad.owner] -= 1;
+
     // set the ad data
     ad.owner = msg.sender;
     ad.fund = _fund;
