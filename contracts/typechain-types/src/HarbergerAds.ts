@@ -47,6 +47,7 @@ export interface HarbergerAdsInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "minimumFund(uint256)": FunctionFragment;
+    "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "revoke(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
@@ -54,8 +55,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
     "setAd(uint256,string)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
     "taxRate()": FunctionFragment;
     "taxesPerSecond(uint256)": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
   };
 
@@ -79,6 +82,7 @@ export interface HarbergerAdsInterface extends utils.Interface {
       | "getApproved"
       | "isApprovedForAll"
       | "minimumFund"
+      | "name"
       | "ownerOf"
       | "revoke"
       | "safeTransferFrom(address,address,uint256)"
@@ -86,8 +90,10 @@ export interface HarbergerAdsInterface extends utils.Interface {
       | "setAd"
       | "setApprovalForAll"
       | "supportsInterface"
+      | "symbol"
       | "taxRate"
       | "taxesPerSecond"
+      | "tokenURI"
       | "transferFrom"
   ): FunctionFragment;
 
@@ -156,6 +162,7 @@ export interface HarbergerAdsInterface extends utils.Interface {
     functionFragment: "minimumFund",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [PromiseOrValue<BigNumberish>]
@@ -193,9 +200,14 @@ export interface HarbergerAdsInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "taxRate", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "taxesPerSecond",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -240,6 +252,7 @@ export interface HarbergerAdsInterface extends utils.Interface {
     functionFragment: "minimumFund",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "revoke", data: BytesLike): Result;
   decodeFunctionResult(
@@ -259,11 +272,13 @@ export interface HarbergerAdsInterface extends utils.Interface {
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "taxRate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "taxesPerSecond",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
     data: BytesLike
@@ -273,18 +288,26 @@ export interface HarbergerAdsInterface extends utils.Interface {
     "AdSet(uint256,string)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "TaxPaid(uint256,uint256)": EventFragment;
+    "TokenBought(uint256,address,uint256)": EventFragment;
+    "TokenFunded(uint256,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "ValuationSet(uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AdSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TaxPaid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenBought"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenFunded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ValuationSet"): EventFragment;
 }
 
 export interface AdSetEventObject {
-  _tokenId: BigNumber;
-  _uri: string;
+  tokenId: BigNumber;
+  uri: string;
 }
 export type AdSetEvent = TypedEvent<[BigNumber, string], AdSetEventObject>;
 
@@ -314,6 +337,40 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
+export interface TaxPaidEventObject {
+  _tokenId: BigNumber;
+  _value: BigNumber;
+}
+export type TaxPaidEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  TaxPaidEventObject
+>;
+
+export type TaxPaidEventFilter = TypedEventFilter<TaxPaidEvent>;
+
+export interface TokenBoughtEventObject {
+  _tokenId: BigNumber;
+  _owner: string;
+  _amount: BigNumber;
+}
+export type TokenBoughtEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  TokenBoughtEventObject
+>;
+
+export type TokenBoughtEventFilter = TypedEventFilter<TokenBoughtEvent>;
+
+export interface TokenFundedEventObject {
+  _tokenId: BigNumber;
+  _amount: BigNumber;
+}
+export type TokenFundedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  TokenFundedEventObject
+>;
+
+export type TokenFundedEventFilter = TypedEventFilter<TokenFundedEvent>;
+
 export interface TransferEventObject {
   from: string;
   to: string;
@@ -325,6 +382,17 @@ export type TransferEvent = TypedEvent<
 >;
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
+export interface ValuationSetEventObject {
+  _tokenId: BigNumber;
+  _valuation: BigNumber;
+}
+export type ValuationSetEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  ValuationSetEventObject
+>;
+
+export type ValuationSetEventFilter = TypedEventFilter<ValuationSetEvent>;
 
 export interface HarbergerAds extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -444,6 +512,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    name(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -486,12 +556,19 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
     taxRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     taxesPerSecond(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     transferFrom(
       _from: PromiseOrValue<string>,
@@ -592,6 +669,8 @@ export interface HarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  name(overrides?: CallOverrides): Promise<string>;
+
   ownerOf(
     _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -634,12 +713,19 @@ export interface HarbergerAds extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  symbol(overrides?: CallOverrides): Promise<string>;
+
   taxRate(overrides?: CallOverrides): Promise<BigNumber>;
 
   taxesPerSecond(
     _value: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  tokenURI(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   transferFrom(
     _from: PromiseOrValue<string>,
@@ -740,6 +826,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<string>;
+
     ownerOf(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -782,12 +870,19 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    symbol(overrides?: CallOverrides): Promise<string>;
+
     taxRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     taxesPerSecond(
       _value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     transferFrom(
       _from: PromiseOrValue<string>,
@@ -798,8 +893,8 @@ export interface HarbergerAds extends BaseContract {
   };
 
   filters: {
-    "AdSet(uint256,string)"(_tokenId?: null, _uri?: null): AdSetEventFilter;
-    AdSet(_tokenId?: null, _uri?: null): AdSetEventFilter;
+    "AdSet(uint256,string)"(tokenId?: null, uri?: null): AdSetEventFilter;
+    AdSet(tokenId?: null, uri?: null): AdSetEventFilter;
 
     "Approval(address,address,uint256)"(
       owner?: PromiseOrValue<string> | null,
@@ -823,6 +918,35 @@ export interface HarbergerAds extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "TaxPaid(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _value?: null
+    ): TaxPaidEventFilter;
+    TaxPaid(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _value?: null
+    ): TaxPaidEventFilter;
+
+    "TokenBought(uint256,address,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _owner?: PromiseOrValue<string> | null,
+      _amount?: null
+    ): TokenBoughtEventFilter;
+    TokenBought(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _owner?: PromiseOrValue<string> | null,
+      _amount?: null
+    ): TokenBoughtEventFilter;
+
+    "TokenFunded(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _amount?: null
+    ): TokenFundedEventFilter;
+    TokenFunded(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _amount?: null
+    ): TokenFundedEventFilter;
+
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
@@ -833,6 +957,15 @@ export interface HarbergerAds extends BaseContract {
       to?: PromiseOrValue<string> | null,
       tokenId?: PromiseOrValue<BigNumberish> | null
     ): TransferEventFilter;
+
+    "ValuationSet(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _valuation?: null
+    ): ValuationSetEventFilter;
+    ValuationSet(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _valuation?: null
+    ): ValuationSetEventFilter;
   };
 
   estimateGas: {
@@ -919,6 +1052,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -961,10 +1096,17 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
     taxRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     taxesPerSecond(
       _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1060,6 +1202,8 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ownerOf(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1102,10 +1246,17 @@ export interface HarbergerAds extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     taxRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     taxesPerSecond(
       _value: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

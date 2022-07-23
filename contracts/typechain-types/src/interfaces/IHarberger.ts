@@ -194,12 +194,20 @@ export interface IHarbergerInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "TaxPaid(uint256,uint256)": EventFragment;
+    "TokenBought(uint256,address,uint256)": EventFragment;
+    "TokenFunded(uint256,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
+    "ValuationSet(uint256,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TaxPaid"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenBought"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenFunded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ValuationSet"): EventFragment;
 }
 
 export interface ApprovalEventObject {
@@ -226,6 +234,40 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
+export interface TaxPaidEventObject {
+  _tokenId: BigNumber;
+  _value: BigNumber;
+}
+export type TaxPaidEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  TaxPaidEventObject
+>;
+
+export type TaxPaidEventFilter = TypedEventFilter<TaxPaidEvent>;
+
+export interface TokenBoughtEventObject {
+  _tokenId: BigNumber;
+  _owner: string;
+  _amount: BigNumber;
+}
+export type TokenBoughtEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  TokenBoughtEventObject
+>;
+
+export type TokenBoughtEventFilter = TypedEventFilter<TokenBoughtEvent>;
+
+export interface TokenFundedEventObject {
+  _tokenId: BigNumber;
+  _amount: BigNumber;
+}
+export type TokenFundedEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  TokenFundedEventObject
+>;
+
+export type TokenFundedEventFilter = TypedEventFilter<TokenFundedEvent>;
+
 export interface TransferEventObject {
   from: string;
   to: string;
@@ -237,6 +279,17 @@ export type TransferEvent = TypedEvent<
 >;
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>;
+
+export interface ValuationSetEventObject {
+  _tokenId: BigNumber;
+  _valuation: BigNumber;
+}
+export type ValuationSetEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  ValuationSetEventObject
+>;
+
+export type ValuationSetEventFilter = TypedEventFilter<ValuationSetEvent>;
 
 export interface IHarberger extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -579,6 +632,35 @@ export interface IHarberger extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "TaxPaid(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _value?: null
+    ): TaxPaidEventFilter;
+    TaxPaid(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _value?: null
+    ): TaxPaidEventFilter;
+
+    "TokenBought(uint256,address,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _owner?: PromiseOrValue<string> | null,
+      _amount?: null
+    ): TokenBoughtEventFilter;
+    TokenBought(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _owner?: PromiseOrValue<string> | null,
+      _amount?: null
+    ): TokenBoughtEventFilter;
+
+    "TokenFunded(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _amount?: null
+    ): TokenFundedEventFilter;
+    TokenFunded(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _amount?: null
+    ): TokenFundedEventFilter;
+
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
       to?: PromiseOrValue<string> | null,
@@ -589,6 +671,15 @@ export interface IHarberger extends BaseContract {
       to?: PromiseOrValue<string> | null,
       tokenId?: PromiseOrValue<BigNumberish> | null
     ): TransferEventFilter;
+
+    "ValuationSet(uint256,uint256)"(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _valuation?: null
+    ): ValuationSetEventFilter;
+    ValuationSet(
+      _tokenId?: PromiseOrValue<BigNumberish> | null,
+      _valuation?: null
+    ): ValuationSetEventFilter;
   };
 
   estimateGas: {
