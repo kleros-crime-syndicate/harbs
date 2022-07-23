@@ -29,7 +29,7 @@ import type {
 
 export interface HarbergerAdsFactoryInterface extends utils.Interface {
   functions: {
-    "create(uint256,uint256,uint256,address,address,string)": FunctionFragment;
+    "create(uint256,uint256,uint256,address,address,string,string,string)": FunctionFragment;
   };
 
   getFunction(nameOrSignatureOrTopic: "create"): FunctionFragment;
@@ -42,6 +42,8 @@ export interface HarbergerAdsFactoryInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -49,14 +51,13 @@ export interface HarbergerAdsFactoryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "create", data: BytesLike): Result;
 
   events: {
-    "HarbergerAdsCreated(string,address,uint256,uint256,uint256,address,address)": EventFragment;
+    "CollectionCreated(address,uint256,uint256,uint256,address,address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "HarbergerAdsCreated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CollectionCreated"): EventFragment;
 }
 
-export interface HarbergerAdsCreatedEventObject {
-  _name: string;
+export interface CollectionCreatedEventObject {
   _address: string;
   _adCount: BigNumber;
   _taxRate: BigNumber;
@@ -64,13 +65,13 @@ export interface HarbergerAdsCreatedEventObject {
   _currency: string;
   _collector: string;
 }
-export type HarbergerAdsCreatedEvent = TypedEvent<
-  [string, string, BigNumber, BigNumber, BigNumber, string, string],
-  HarbergerAdsCreatedEventObject
+export type CollectionCreatedEvent = TypedEvent<
+  [string, BigNumber, BigNumber, BigNumber, string, string],
+  CollectionCreatedEventObject
 >;
 
-export type HarbergerAdsCreatedEventFilter =
-  TypedEventFilter<HarbergerAdsCreatedEvent>;
+export type CollectionCreatedEventFilter =
+  TypedEventFilter<CollectionCreatedEvent>;
 
 export interface HarbergerAdsFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -106,6 +107,8 @@ export interface HarbergerAdsFactory extends BaseContract {
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
       _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _tokenURI: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
@@ -117,6 +120,8 @@ export interface HarbergerAdsFactory extends BaseContract {
     _currency: PromiseOrValue<string>,
     _collector: PromiseOrValue<string>,
     _name: PromiseOrValue<string>,
+    _symbol: PromiseOrValue<string>,
+    _tokenURI: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -128,29 +133,29 @@ export interface HarbergerAdsFactory extends BaseContract {
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
       _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _tokenURI: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    "HarbergerAdsCreated(string,address,uint256,uint256,uint256,address,address)"(
-      _name?: PromiseOrValue<string> | null,
+    "CollectionCreated(address,uint256,uint256,uint256,address,address)"(
       _address?: null,
       _adCount?: null,
       _taxRate?: null,
       _cooldownPeriod?: null,
       _currency?: null,
       _collector?: null
-    ): HarbergerAdsCreatedEventFilter;
-    HarbergerAdsCreated(
-      _name?: PromiseOrValue<string> | null,
+    ): CollectionCreatedEventFilter;
+    CollectionCreated(
       _address?: null,
       _adCount?: null,
       _taxRate?: null,
       _cooldownPeriod?: null,
       _currency?: null,
       _collector?: null
-    ): HarbergerAdsCreatedEventFilter;
+    ): CollectionCreatedEventFilter;
   };
 
   estimateGas: {
@@ -161,6 +166,8 @@ export interface HarbergerAdsFactory extends BaseContract {
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
       _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _tokenURI: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
@@ -173,6 +180,8 @@ export interface HarbergerAdsFactory extends BaseContract {
       _currency: PromiseOrValue<string>,
       _collector: PromiseOrValue<string>,
       _name: PromiseOrValue<string>,
+      _symbol: PromiseOrValue<string>,
+      _tokenURI: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
