@@ -30,7 +30,7 @@ type Ad @entity {
   id: ID!
   "Owner of the item, and taxpayer"
   owner: Bytes!
-  "Uri of the item"
+  "Uri of the image"
   uri: String!
   "Current valuation of the item"
   valuation: BigInt!
