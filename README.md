@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <i style="font-size: 28px;"> Harbringer Ads<i/>
+  <i style="font-size: 28px;"> Harbringer Ads</i>
 </p>
 
 <p align="center">
