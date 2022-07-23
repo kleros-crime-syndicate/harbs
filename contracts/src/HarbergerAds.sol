@@ -3,9 +3,10 @@ pragma solidity ^0.8.9;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "./interfaces/IHarbergerAds.sol";
 
-contract HarbergerAds is IHarbergerAds {
+contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   struct Ad {
     address owner;
     uint256 valuation; // current valuation of the item.
@@ -27,21 +28,26 @@ contract HarbergerAds is IHarbergerAds {
   mapping(uint256 => Ad) public ads;
   mapping(address => uint256) public balances;
 
-  event AdSet(uint256 tokenId, string uri);
-  event ValuationChanged(uint256 tokenId, uint256 valuation);
-  event AdFundChanged(uint256 tokenId, uint256 value);
-  event TaxPaid(uint256 tokenId, uint256 value);
+  // Metadata stuff
+  string internal globalTokenURI;
+  string internal storedSymbol;
+  string internal storedName;
 
-  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector) {
+  event AdSet(uint256 tokenId, string uri);
+
+  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _name, string memory _symbol, string memory _tokenURI) {
     adCount = _adCount;
     taxRate = _taxRate;
     currency = _currency;
     cooldownPeriod = _cooldownPeriod;
     collector = _collector;
+    globalTokenURI = _tokenURI;
+    storedSymbol = _symbol;
+    storedSymbol = _name;
   }
 
   // edge cases:
-  // if due taxes cannot be paid, the buyer gets ownership of the item and doesnt have to pay.
+  // if due taxes cannot be paid, the buyer buys the item from collector.
 
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) override external {
     Ad storage ad = ads[_tokenId];
@@ -80,8 +86,8 @@ contract HarbergerAds is IHarbergerAds {
     ad.lastPaidTimestamp = block.timestamp;
 
     emit Transfer(oldOwner, msg.sender, _tokenId);
-    emit ValuationChanged(_tokenId, _valuation);
-    emit AdFundChanged(_tokenId, _fund);
+    emit ValuationSet(_tokenId, _valuation);
+    emit TokenFunded(_tokenId, _fund);
   }
 
   function fund(uint256 _tokenId, uint256 _value) override external {
@@ -91,7 +97,7 @@ contract HarbergerAds is IHarbergerAds {
     require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
     ad.fund += _value;
 
-    emit AdFundChanged(_tokenId, ad.fund);
+    emit TokenFunded(_tokenId, ad.fund);
   }
 
   function defund(uint256 _tokenId, uint256 _value) override external {
@@ -107,7 +113,7 @@ contract HarbergerAds is IHarbergerAds {
       if (_value < ad.fund) {
         ad.fund -= _value;
         currency.transfer(ad.owner, _value);
-        emit AdFundChanged(_tokenId, ad.fund);
+        emit TokenFunded(_tokenId, ad.fund);
       } else {
         // defund all available, but revoke the item too.
         currency.transfer(ad.owner, ad.fund);
@@ -134,7 +140,6 @@ contract HarbergerAds is IHarbergerAds {
     } else {
       // there's not enough to pay the owed taxes. pay everything to collector.
       currency.transfer(collector, ad.fund);
-      // now revoke
     }
 
     _revoke(_tokenId);
@@ -151,7 +156,7 @@ contract HarbergerAds is IHarbergerAds {
     ad.valuation = _valuation;
     ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
 
-    emit ValuationChanged(_tokenId, _valuation);
+    emit ValuationSet(_tokenId, _valuation);
   }
 
   function setAd(uint256 _tokenId, string calldata _uri) override external {
@@ -216,6 +221,21 @@ contract HarbergerAds is IHarbergerAds {
     revert("NOT IMPLEMENTED");
   }
 
+  // IERC721Metadata
+
+  function tokenURI(uint256 tokenId) external view returns (string memory) {
+    if (tokenId < adCount) return globalTokenURI;
+    return ""; // does not exist
+  }
+
+  function name() external view returns (string memory) {
+    return storedName;
+  }
+
+  function symbol() external view returns (string memory) {
+    return storedSymbol;
+  }
+
   /// IERC165 STUFF
   function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
     return (interfaceId == 0x861c59cd);
@@ -231,9 +251,9 @@ contract HarbergerAds is IHarbergerAds {
     ad.owner = collector;
     ad.valuation = 0;
 
-    emit ValuationChanged(_tokenId, 0);
-    emit AdFundChanged(_tokenId, 0);
-    emit Transfer(oldOwner, collector, _tokenId);
+    emit ValuationSet(_tokenId, 0);
+    emit TokenFunded(_tokenId, 0);
+    emit Transfer(oldOwner, address(0), _tokenId);
   }
 
   function _payTax(uint256 _tokenId, uint256 _amount) internal {
