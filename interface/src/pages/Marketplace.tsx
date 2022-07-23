@@ -2,7 +2,8 @@ import Harb from "components/Harb";
 
 const Marketplace: React.FC = () => (
   <>
-    <div className={`
+    <div
+      className={`
       grid
       grid-cols-3
       gap-12
@@ -10,10 +11,12 @@ const Marketplace: React.FC = () => (
       items-center
       w-full
       max-w-[1900px]
-      ml-auto
-      mr-auto
-    `}>
-      {[1,2,3,4].map(() => <Harb valuation={3000} />)}
+      mx-auto
+    `}
+    >
+      {[1, 2, 3, 4].map(() => (
+        <Harb valuation={3000} />
+      ))}
     </div>
   </>
 );

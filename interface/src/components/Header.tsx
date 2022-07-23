@@ -1,59 +1,68 @@
-import ConnectButton from "components/ConnectButton";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
+import Logo from "../assets/harbs.svg";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { shortenAddress } from "utils/address";
+import { injected } from "utils/connectors";
 
-const Link: React.FC<{ text: string, href: string }> = ({ text, href }) => (
+const Link: React.FC<{ text: string; to: string }> = ({ text, to }) => (
   <NavLink
-    to={href}
-    className={({ isActive }) => (classnames(
-      "text-xl",
-      "text-black",
-      "hover:text-gray-500",
-      {"font-semibold": isActive}
-    ))}
+    to={to}
+    className={({ isActive }) =>
+      classnames("px-2 text-3xl text-white hover:text-gray-400", { "font-semibold bg-theme": isActive })
+    }
   >
-    { text }
+    {text}
   </NavLink>
 );
 
-const Header: React.FC = () => (
-  <nav className={`
+const Header: React.FC = () => {
+  const { account, activate } = useWeb3React<Web3Provider>();
+
+  return (
+    <nav
+      className={`
     sticky
     top-0
     z-50
     w-full
-    flex
-    items-center
-    justify-center
     py-4
     px-8
-    bg-gray-100
-    text-gray-500
+    bg-[#2C2930]
+    text-white
     hover:text-gray-700
     focus:text-gray-700
     shadow-lg
-  `}>
-    <div className={`
+  `}
+    >
+      <div
+        className={`
       flex
       items-center
       justify-between
       max-w-[1900px]
       w-full
-    `}>
-      <a className="text-4xl text-black font-semibold" href="#">
-        HARBS
-      </a>
-      <div className={`
-        flex
-        gap-12
-      `}>
-        <Link text="MARKETPLACE" href="marketplace"/>
-        <Link text="MY ACCOUNT" href="account" />
-        <Link text="NEW COLLECTION" href="new-collection" />
+    `}
+      >
+        <div className="flex">
+          <Logo className="w-96 mr-8" />
+          <div className="flex flex-col">
+            <Link to="/marketplace" text="MARKETPLACE" />
+            <Link to="/account" text="MY ACCOUNT" />
+            <Link to="/new-collection" text="NEW COLLECTION" />
+          </div>
+        </div>
+
+        <button
+          className="text-white text-3xl px-2 border-4 hover:bg-theme-darkish hover:border-theme-lightish"
+          onClick={() => activate(injected)}
+        >
+          {!!account ? shortenAddress(account) : "Connect"}
+        </button>
       </div>
-      <ConnectButton />
-    </div>
-  </nav>
-);
+    </nav>
+  );
+};
 
 export default Header;
