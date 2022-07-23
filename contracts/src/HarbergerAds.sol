@@ -20,13 +20,13 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
 
   uint256 immutable public cooldownPeriod; // certain actions need the cooldownPeriod to elapse
 
-  uint256 immutable public adCount; // number of tokens
+  uint256 immutable public totalSupply; // number of tokens
 
   IERC20 immutable public currency;
   address immutable public collector; // recipient of the taxes
 
   mapping(uint256 => Ad) public ads;
-  mapping(address => uint256) public balances;
+  mapping(address => uint256) public balanceOf;
 
   // Metadata stuff
   string internal globalTokenURI;
@@ -35,15 +35,15 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
 
   event AdSet(uint256 tokenId, string uri);
 
-  constructor(uint256 _adCount, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _name, string memory _symbol, string memory _tokenURI) {
-    adCount = _adCount;
+  constructor(uint256 _totalSupply, uint256 _taxRate, uint256 _cooldownPeriod, IERC20 _currency, address _collector, string memory _name, string memory _symbol, string memory _tokenURI) {
+    totalSupply = _totalSupply;
     taxRate = _taxRate;
     currency = _currency;
     cooldownPeriod = _cooldownPeriod;
     collector = _collector;
     globalTokenURI = _tokenURI;
+    storedName = _name;
     storedSymbol = _symbol;
-    storedSymbol = _name;
   }
 
   // edge cases:
@@ -51,7 +51,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
 
   function buy(uint256 _tokenId, uint256 _offer, uint256 _valuation, uint256 _fund) override external {
     Ad storage ad = ads[_tokenId];
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     require(ad.owner != msg.sender, "Can't buy your own ad");
     // check if item has enough funds to pay taxes
     uint256 amountDue = dueTaxes(_tokenId);
@@ -85,13 +85,15 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
     ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
     ad.lastPaidTimestamp = block.timestamp;
 
+    balanceOf[msg.sender] += 1;
+
     emit Transfer(oldOwner, msg.sender, _tokenId);
     emit ValuationSet(_tokenId, _valuation);
     emit TokenFunded(_tokenId, _fund);
   }
 
   function fund(uint256 _tokenId, uint256 _value) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
 
     require(currency.transferFrom(msg.sender, address(this), _value), "Bad transfer");
@@ -101,7 +103,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   function defund(uint256 _tokenId, uint256 _value) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     require(block.timestamp >= ad.nextValuationTimestamp, "Wait more time");
@@ -128,7 +130,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   function revoke(uint256 _tokenId) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Not owner");
     // check available amount
@@ -146,7 +148,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   function changeValuation(uint256 _tokenId, uint256 _valuation) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner");
     if (ad.valuation > _valuation) {
@@ -160,7 +162,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   function setAd(uint256 _tokenId, string calldata _uri) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     require(ad.owner == msg.sender, "Only owner changes ad");
 
@@ -168,7 +170,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   function collect(uint256 _tokenId) override external {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     uint256 taxes = dueTaxes(_tokenId);
     if (taxes >= ad.fund) {
@@ -183,13 +185,8 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   }
 
   /// ERC-721 STUFF
-
-  function balanceOf(address _owner) view override external returns(uint256) {
-    return balances[_owner];
-  }
-
   function ownerOf(uint256 _tokenId) view override external returns(address) {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     return (ads[_tokenId].owner);
   }
 
@@ -224,7 +221,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   // IERC721Metadata
 
   function tokenURI(uint256 tokenId) external view returns (string memory) {
-    if (tokenId < adCount) return globalTokenURI;
+    if (tokenId < totalSupply) return globalTokenURI;
     return ""; // does not exist
   }
 
@@ -251,6 +248,8 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
     ad.owner = collector;
     ad.valuation = 0;
 
+    balanceOf[msg.sender] -= 1;
+
     emit ValuationSet(_tokenId, 0);
     emit TokenFunded(_tokenId, 0);
     emit Transfer(oldOwner, address(0), _tokenId);
@@ -268,7 +267,7 @@ contract HarbergerAds is IHarbergerAds, IERC721Metadata {
   /// VIEW FUNCTIONS
 
   function dueTaxes(uint256 _tokenId) public view returns (uint256) {
-    require(_tokenId < adCount, "Not existing");
+    require(_tokenId < totalSupply, "Not existing");
     Ad storage ad = ads[_tokenId];
     uint256 rate = taxesPerSecond(ad.valuation);
     return (rate * (block.timestamp - ad.lastPaidTimestamp));
