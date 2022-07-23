@@ -18,33 +18,66 @@ export type Scalars = {
   Bytes: any;
 };
 
-export type BlockChangedFilter = {
-  number_gte: Scalars['Int'];
-};
-
-export type Block_Height = {
-  hash?: InputMaybe<Scalars['Bytes']>;
-  number?: InputMaybe<Scalars['Int']>;
-  number_gte?: InputMaybe<Scalars['Int']>;
-};
-
-/** Defines the order direction, either ascending or descending */
-export enum OrderDirection {
-  Asc = 'asc',
-  Desc = 'desc'
-}
-
-export type Property = {
-  __typename?: 'Property';
+export type Ad = {
+  __typename?: 'Ad';
+  /** Collection this ad belongs to */
+  collection: Collection;
+  /** Address of the collection */
+  collectionAddress: Scalars['Bytes'];
+  /** Funds allocated to pay for taxes */
+  fund: Scalars['BigInt'];
+  /** {token_id}@{contract_address} */
   id: Scalars['ID'];
-  info: Scalars['String'];
+  /** Last time taxes were paid, used to compute due taxes */
+  lastPaidTimestamp: Scalars['BigInt'];
+  /** Next time the valuation will be able to decrease or partially defund */
+  nextValuationTimestamp: Scalars['BigInt'];
+  /** Owner of the item, and taxpayer */
   owner: Scalars['Bytes'];
+  /** Uri of the image */
+  uri: Scalars['String'];
+  /** Current valuation of the item */
   valuation: Scalars['BigInt'];
 };
 
-export type Property_Filter = {
+export type Ad_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
+  collection?: InputMaybe<Scalars['String']>;
+  collectionAddress?: InputMaybe<Scalars['Bytes']>;
+  collectionAddress_contains?: InputMaybe<Scalars['Bytes']>;
+  collectionAddress_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  collectionAddress_not?: InputMaybe<Scalars['Bytes']>;
+  collectionAddress_not_contains?: InputMaybe<Scalars['Bytes']>;
+  collectionAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  collection_?: InputMaybe<Collection_Filter>;
+  collection_contains?: InputMaybe<Scalars['String']>;
+  collection_contains_nocase?: InputMaybe<Scalars['String']>;
+  collection_ends_with?: InputMaybe<Scalars['String']>;
+  collection_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  collection_gt?: InputMaybe<Scalars['String']>;
+  collection_gte?: InputMaybe<Scalars['String']>;
+  collection_in?: InputMaybe<Array<Scalars['String']>>;
+  collection_lt?: InputMaybe<Scalars['String']>;
+  collection_lte?: InputMaybe<Scalars['String']>;
+  collection_not?: InputMaybe<Scalars['String']>;
+  collection_not_contains?: InputMaybe<Scalars['String']>;
+  collection_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  collection_not_ends_with?: InputMaybe<Scalars['String']>;
+  collection_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  collection_not_in?: InputMaybe<Array<Scalars['String']>>;
+  collection_not_starts_with?: InputMaybe<Scalars['String']>;
+  collection_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  collection_starts_with?: InputMaybe<Scalars['String']>;
+  collection_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  fund?: InputMaybe<Scalars['BigInt']>;
+  fund_gt?: InputMaybe<Scalars['BigInt']>;
+  fund_gte?: InputMaybe<Scalars['BigInt']>;
+  fund_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fund_lt?: InputMaybe<Scalars['BigInt']>;
+  fund_lte?: InputMaybe<Scalars['BigInt']>;
+  fund_not?: InputMaybe<Scalars['BigInt']>;
+  fund_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -53,32 +86,48 @@ export type Property_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  info?: InputMaybe<Scalars['String']>;
-  info_contains?: InputMaybe<Scalars['String']>;
-  info_contains_nocase?: InputMaybe<Scalars['String']>;
-  info_ends_with?: InputMaybe<Scalars['String']>;
-  info_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  info_gt?: InputMaybe<Scalars['String']>;
-  info_gte?: InputMaybe<Scalars['String']>;
-  info_in?: InputMaybe<Array<Scalars['String']>>;
-  info_lt?: InputMaybe<Scalars['String']>;
-  info_lte?: InputMaybe<Scalars['String']>;
-  info_not?: InputMaybe<Scalars['String']>;
-  info_not_contains?: InputMaybe<Scalars['String']>;
-  info_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  info_not_ends_with?: InputMaybe<Scalars['String']>;
-  info_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  info_not_in?: InputMaybe<Array<Scalars['String']>>;
-  info_not_starts_with?: InputMaybe<Scalars['String']>;
-  info_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  info_starts_with?: InputMaybe<Scalars['String']>;
-  info_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  lastPaidTimestamp?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lastPaidTimestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_not?: InputMaybe<Scalars['BigInt']>;
+  lastPaidTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  nextValuationTimestamp?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  nextValuationTimestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_not?: InputMaybe<Scalars['BigInt']>;
+  nextValuationTimestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   owner?: InputMaybe<Scalars['Bytes']>;
   owner_contains?: InputMaybe<Scalars['Bytes']>;
   owner_in?: InputMaybe<Array<Scalars['Bytes']>>;
   owner_not?: InputMaybe<Scalars['Bytes']>;
   owner_not_contains?: InputMaybe<Scalars['Bytes']>;
   owner_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  uri?: InputMaybe<Scalars['String']>;
+  uri_contains?: InputMaybe<Scalars['String']>;
+  uri_contains_nocase?: InputMaybe<Scalars['String']>;
+  uri_ends_with?: InputMaybe<Scalars['String']>;
+  uri_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  uri_gt?: InputMaybe<Scalars['String']>;
+  uri_gte?: InputMaybe<Scalars['String']>;
+  uri_in?: InputMaybe<Array<Scalars['String']>>;
+  uri_lt?: InputMaybe<Scalars['String']>;
+  uri_lte?: InputMaybe<Scalars['String']>;
+  uri_not?: InputMaybe<Scalars['String']>;
+  uri_not_contains?: InputMaybe<Scalars['String']>;
+  uri_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  uri_not_ends_with?: InputMaybe<Scalars['String']>;
+  uri_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  uri_not_in?: InputMaybe<Array<Scalars['String']>>;
+  uri_not_starts_with?: InputMaybe<Scalars['String']>;
+  uri_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  uri_starts_with?: InputMaybe<Scalars['String']>;
+  uri_starts_with_nocase?: InputMaybe<Scalars['String']>;
   valuation?: InputMaybe<Scalars['BigInt']>;
   valuation_gt?: InputMaybe<Scalars['BigInt']>;
   valuation_gte?: InputMaybe<Scalars['BigInt']>;
@@ -89,50 +138,93 @@ export type Property_Filter = {
   valuation_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
 };
 
-export enum Property_OrderBy {
+export enum Ad_OrderBy {
+  Collection = 'collection',
+  CollectionAddress = 'collectionAddress',
+  Fund = 'fund',
   Id = 'id',
-  Info = 'info',
+  LastPaidTimestamp = 'lastPaidTimestamp',
+  NextValuationTimestamp = 'nextValuationTimestamp',
   Owner = 'owner',
+  Uri = 'uri',
   Valuation = 'valuation'
 }
 
-export type Proposal = {
-  __typename?: 'Proposal';
-  creator: Scalars['Bytes'];
-  description: Scalars['String'];
-  id: Scalars['ID'];
-  votingClosingTime: Scalars['BigInt'];
+export type BlockChangedFilter = {
+  number_gte: Scalars['Int'];
 };
 
-export type Proposal_Filter = {
+export type Block_Height = {
+  hash?: InputMaybe<Scalars['Bytes']>;
+  number?: InputMaybe<Scalars['Int']>;
+  number_gte?: InputMaybe<Scalars['Int']>;
+};
+
+export type Collection = {
+  __typename?: 'Collection';
+  /** How many ads does the collection have */
+  adCount: Scalars['BigInt'];
+  /** Ads belonging to this collection */
+  ads: Array<Ad>;
+  /** Address that receives the taxes */
+  collector: Scalars['Bytes'];
+  /** Period of time needed to partially defund or decrease valuation */
+  cooldownPeriod: Scalars['BigInt'];
+  /** Address of the ERC-20 token used to value or tax */
+  currency: Scalars['Bytes'];
+  /** {contract_address} */
+  id: Scalars['ID'];
+  /** Name of the collection */
+  name: Scalars['String'];
+  /** Symbol of the collection */
+  symbol: Scalars['String'];
+  /** Tax rate per year */
+  taxRate: Scalars['BigInt'];
+  /** Token URI of the collection */
+  tokenURI: Scalars['String'];
+};
+
+
+export type CollectionAdsArgs = {
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Ad_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<Ad_Filter>;
+};
+
+export type Collection_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>;
-  creator?: InputMaybe<Scalars['Bytes']>;
-  creator_contains?: InputMaybe<Scalars['Bytes']>;
-  creator_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  creator_not?: InputMaybe<Scalars['Bytes']>;
-  creator_not_contains?: InputMaybe<Scalars['Bytes']>;
-  creator_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  description?: InputMaybe<Scalars['String']>;
-  description_contains?: InputMaybe<Scalars['String']>;
-  description_contains_nocase?: InputMaybe<Scalars['String']>;
-  description_ends_with?: InputMaybe<Scalars['String']>;
-  description_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  description_gt?: InputMaybe<Scalars['String']>;
-  description_gte?: InputMaybe<Scalars['String']>;
-  description_in?: InputMaybe<Array<Scalars['String']>>;
-  description_lt?: InputMaybe<Scalars['String']>;
-  description_lte?: InputMaybe<Scalars['String']>;
-  description_not?: InputMaybe<Scalars['String']>;
-  description_not_contains?: InputMaybe<Scalars['String']>;
-  description_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  description_not_ends_with?: InputMaybe<Scalars['String']>;
-  description_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  description_not_in?: InputMaybe<Array<Scalars['String']>>;
-  description_not_starts_with?: InputMaybe<Scalars['String']>;
-  description_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  description_starts_with?: InputMaybe<Scalars['String']>;
-  description_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  adCount?: InputMaybe<Scalars['BigInt']>;
+  adCount_gt?: InputMaybe<Scalars['BigInt']>;
+  adCount_gte?: InputMaybe<Scalars['BigInt']>;
+  adCount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  adCount_lt?: InputMaybe<Scalars['BigInt']>;
+  adCount_lte?: InputMaybe<Scalars['BigInt']>;
+  adCount_not?: InputMaybe<Scalars['BigInt']>;
+  adCount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  ads_?: InputMaybe<Ad_Filter>;
+  collector?: InputMaybe<Scalars['Bytes']>;
+  collector_contains?: InputMaybe<Scalars['Bytes']>;
+  collector_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  collector_not?: InputMaybe<Scalars['Bytes']>;
+  collector_not_contains?: InputMaybe<Scalars['Bytes']>;
+  collector_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  cooldownPeriod?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_gt?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_gte?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  cooldownPeriod_lt?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_lte?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_not?: InputMaybe<Scalars['BigInt']>;
+  cooldownPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  currency?: InputMaybe<Scalars['Bytes']>;
+  currency_contains?: InputMaybe<Scalars['Bytes']>;
+  currency_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  currency_not?: InputMaybe<Scalars['Bytes']>;
+  currency_not_contains?: InputMaybe<Scalars['Bytes']>;
+  currency_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   id?: InputMaybe<Scalars['ID']>;
   id_gt?: InputMaybe<Scalars['ID']>;
   id_gte?: InputMaybe<Scalars['ID']>;
@@ -141,31 +233,103 @@ export type Proposal_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  votingClosingTime?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_gt?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_gte?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  votingClosingTime_lt?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_lte?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_not?: InputMaybe<Scalars['BigInt']>;
-  votingClosingTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  symbol?: InputMaybe<Scalars['String']>;
+  symbol_contains?: InputMaybe<Scalars['String']>;
+  symbol_contains_nocase?: InputMaybe<Scalars['String']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  symbol_gt?: InputMaybe<Scalars['String']>;
+  symbol_gte?: InputMaybe<Scalars['String']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_lt?: InputMaybe<Scalars['String']>;
+  symbol_lte?: InputMaybe<Scalars['String']>;
+  symbol_not?: InputMaybe<Scalars['String']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']>;
+  symbol_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']>;
+  symbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  taxRate?: InputMaybe<Scalars['BigInt']>;
+  taxRate_gt?: InputMaybe<Scalars['BigInt']>;
+  taxRate_gte?: InputMaybe<Scalars['BigInt']>;
+  taxRate_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  taxRate_lt?: InputMaybe<Scalars['BigInt']>;
+  taxRate_lte?: InputMaybe<Scalars['BigInt']>;
+  taxRate_not?: InputMaybe<Scalars['BigInt']>;
+  taxRate_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  tokenURI?: InputMaybe<Scalars['String']>;
+  tokenURI_contains?: InputMaybe<Scalars['String']>;
+  tokenURI_contains_nocase?: InputMaybe<Scalars['String']>;
+  tokenURI_ends_with?: InputMaybe<Scalars['String']>;
+  tokenURI_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  tokenURI_gt?: InputMaybe<Scalars['String']>;
+  tokenURI_gte?: InputMaybe<Scalars['String']>;
+  tokenURI_in?: InputMaybe<Array<Scalars['String']>>;
+  tokenURI_lt?: InputMaybe<Scalars['String']>;
+  tokenURI_lte?: InputMaybe<Scalars['String']>;
+  tokenURI_not?: InputMaybe<Scalars['String']>;
+  tokenURI_not_contains?: InputMaybe<Scalars['String']>;
+  tokenURI_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  tokenURI_not_ends_with?: InputMaybe<Scalars['String']>;
+  tokenURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  tokenURI_not_in?: InputMaybe<Array<Scalars['String']>>;
+  tokenURI_not_starts_with?: InputMaybe<Scalars['String']>;
+  tokenURI_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  tokenURI_starts_with?: InputMaybe<Scalars['String']>;
+  tokenURI_starts_with_nocase?: InputMaybe<Scalars['String']>;
 };
 
-export enum Proposal_OrderBy {
-  Creator = 'creator',
-  Description = 'description',
+export enum Collection_OrderBy {
+  AdCount = 'adCount',
+  Ads = 'ads',
+  Collector = 'collector',
+  CooldownPeriod = 'cooldownPeriod',
+  Currency = 'currency',
   Id = 'id',
-  VotingClosingTime = 'votingClosingTime'
+  Name = 'name',
+  Symbol = 'symbol',
+  TaxRate = 'taxRate',
+  TokenUri = 'tokenURI'
+}
+
+/** Defines the order direction, either ascending or descending */
+export enum OrderDirection {
+  Asc = 'asc',
+  Desc = 'desc'
 }
 
 export type Query = {
   __typename?: 'Query';
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
-  properties: Array<Property>;
-  property?: Maybe<Property>;
-  proposal?: Maybe<Proposal>;
-  proposals: Array<Proposal>;
+  ad?: Maybe<Ad>;
+  ads: Array<Ad>;
+  collection?: Maybe<Collection>;
+  collections: Array<Collection>;
 };
 
 
@@ -174,49 +338,49 @@ export type Query_MetaArgs = {
 };
 
 
-export type QueryPropertiesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Property_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Property_Filter>;
-};
-
-
-export type QueryPropertyArgs = {
+export type QueryAdArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryProposalArgs = {
+export type QueryAdsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Ad_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Ad_Filter>;
+};
+
+
+export type QueryCollectionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type QueryProposalsArgs = {
+export type QueryCollectionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Proposal_OrderBy>;
+  orderBy?: InputMaybe<Collection_OrderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Proposal_Filter>;
+  where?: InputMaybe<Collection_Filter>;
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
   /** Access to subgraph metadata */
   _meta?: Maybe<_Meta_>;
-  properties: Array<Property>;
-  property?: Maybe<Property>;
-  proposal?: Maybe<Proposal>;
-  proposals: Array<Proposal>;
+  ad?: Maybe<Ad>;
+  ads: Array<Ad>;
+  collection?: Maybe<Collection>;
+  collections: Array<Collection>;
 };
 
 
@@ -225,39 +389,39 @@ export type Subscription_MetaArgs = {
 };
 
 
-export type SubscriptionPropertiesArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Property_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Property_Filter>;
-};
-
-
-export type SubscriptionPropertyArgs = {
+export type SubscriptionAdArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type SubscriptionProposalArgs = {
+export type SubscriptionAdsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Ad_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Ad_Filter>;
+};
+
+
+export type SubscriptionCollectionArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
   subgraphError?: _SubgraphErrorPolicy_;
 };
 
 
-export type SubscriptionProposalsArgs = {
+export type SubscriptionCollectionsArgs = {
   block?: InputMaybe<Block_Height>;
   first?: InputMaybe<Scalars['Int']>;
-  orderBy?: InputMaybe<Proposal_OrderBy>;
+  orderBy?: InputMaybe<Collection_OrderBy>;
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Proposal_Filter>;
+  where?: InputMaybe<Collection_Filter>;
 };
 
 export type _Block_ = {
@@ -292,34 +456,23 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type PropertiesQueryVariables = Exact<{ [key: string]: never; }>;
+export type AdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PropertiesQuery = { __typename?: 'Query', properties: Array<{ __typename?: 'Property', id: string, owner: any, valuation: any, info: string }> };
-
-export type ProposalsQueryVariables = Exact<{ [key: string]: never; }>;
+export type AdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
 
 
-export type ProposalsQuery = { __typename?: 'Query', proposals: Array<{ __typename?: 'Proposal', id: string, creator: any, votingClosingTime: any, description: string }> };
-
-
-export const PropertiesDocument = gql`
-    query Properties {
-  properties {
+export const AdsDocument = gql`
+    query ads {
+  ads {
     id
     owner
+    uri
     valuation
-    info
-  }
-}
-    `;
-export const ProposalsDocument = gql`
-    query Proposals {
-  proposals {
-    id
-    creator
-    votingClosingTime
-    description
+    collection {
+      name
+      symbol
+    }
   }
 }
     `;
@@ -331,11 +484,8 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    Properties(variables?: PropertiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<PropertiesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<PropertiesQuery>(PropertiesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Properties', 'query');
-    },
-    Proposals(variables?: ProposalsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProposalsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProposalsQuery>(ProposalsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Proposals', 'query');
+    ads(variables?: AdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AdsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AdsQuery>(AdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ads', 'query');
     }
   };
 }

@@ -1,4 +1,5 @@
 import { useFormik } from "formik";
+import { useParams } from "react-router-dom";
 
 const OwnerMenu: React.FC = () => {
   const formik = useFormik({
@@ -9,6 +10,7 @@ const OwnerMenu: React.FC = () => {
       alert(JSON.stringify(values, null, 2));
     },
   });
+  const { tokenID, address } = useParams();
   return (
     <div className="flex gap-12 items-center">
       <form className="flex gap-2 items-center" onSubmit={formik.handleSubmit}>

@@ -29,7 +29,8 @@ const Header: React.FC = () => {
     w-full
     py-4
     px-8
-    bg-[#2C2930]
+    bg-background/95
+    backdrop-blur-md
     text-white
     hover:text-gray-700
     focus:text-gray-700
@@ -41,7 +42,6 @@ const Header: React.FC = () => {
       flex
       items-center
       justify-between
-      max-w-[1900px]
       w-full
     `}
       >
