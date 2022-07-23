@@ -9,22 +9,29 @@ const deployArbitration: DeployFunction = async (hre: HardhatRuntimeEnvironment)
   // fallback to hardhat node signers on local network
   const deployer = (await getNamedAccounts()).deployer ?? (await hre.ethers.getSigners())[0].address;
 
-  // TODO: not implemented yet
-  const erc20 = await deploy("Currency", {
-    from: deployer,
-    args: ["Harberger Ads Currency", "HAC", 18],
-    log: true,
-  });
+  let erc20Address; 
+  const chainId = await getChainId();
+  if (chainId === "31337") {
+    // Hardhat network
+    console.log("Hardhat network");
+    erc20Address = (await deploy("Currency", {
+      from: deployer,
+      args: ["Harberger Ads Currency", "HAC", 18],
+      log: true,
+    })).address;
+  } else if (chainId === "80001") {
+    // Mumbai wMATIC
+    erc20Address = "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889";  
+  }
 
   const factory = await deploy("HarbergerAdsFactory", {
     from: deployer,
     args: [],
     log: true,
-    waitConfirmations: 1
-  })
+    waitConfirmations: 1,
+  });
 
-  await execute("HarbergerAdsFactory", {from: deployer, log: true}, "create", 3, 2000, 100, erc20.address, deployer)
-
+  await execute("HarbergerAdsFactory", { from: deployer, log: true }, "create", 3, 2000, 100, erc20Address, deployer, "EthCC Hack 2022");
 };
 
 export default deployArbitration;
