@@ -8,7 +8,8 @@ dataSources:
     name: HarbergerAdsFactory
     network: mumbai
     source:
-      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      address: "0x300CbF0829762FeDc90287D08aeDf261EE6ED8eB"
+      startBlock: 27301382
       abi: HarbergerAdsFactory
     mapping:
       kind: ethereum/events
@@ -19,10 +20,12 @@ dataSources:
       abis:
         - name: HarbergerAdsFactory
           file: ./abis/HarbergerAdsFactory.json
+        - name: HarbergerAds
+          file: ./abis/HarbergerAds.json
       eventHandlers:
         - event: CollectionCreated(address,uint256,uint256,uint256,address,address)
           handler: handleCollectionCreated
-      file: ./src/mappings.ts
+      file: ./src/factory.ts
 templates:
   - kind: ethereum
     name: HarbergerAds
@@ -49,4 +52,4 @@ templates:
           handler: handleTaxPaid
         - event: AdSet(uint256,string)
           handler: handleAdSet
-      file: ./src/mappings.ts
+      file: ./src/harberger-ads.ts
