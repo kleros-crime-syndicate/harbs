@@ -1,0 +1,52 @@
+specVersion: 0.0.4
+description: Harbs Ads
+repository: https://github.com/kleros-crime-sydndicate/harbs
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: HarbergerAdsFactory
+    network: mumbai
+    source:
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      abi: HarbergerAdsFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+      abis:
+        - name: HarbergerAdsFactory
+          file: ./abis/HarbergerAdsFactory.json
+      eventHandlers:
+        - event: CollectionCreated(address,uint256,uint256,uint256,address,address)
+          handler: handleCollectionCreated
+      file: ./src/mappings.ts
+templates:
+  - kind: ethereum
+    name: HarbergerAds
+    network: mumbai
+    source:
+      abi: HarbergerAds
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Ad
+      abis:
+        - name: HarbergerAds
+          file: ./abis/HarbergerAds.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: TokenFunded(indexed uint256,uint256)
+          handler: handleTokenFunded
+        - event: ValuationSet(indexed uint256,uint256)
+          handler: handleValuationChanged
+        - event: TaxPaid(indexed uint256,uint256)
+          handler: handleTaxPaid
+        - event: AdSet(uint256,string)
+          handler: handleAdSet
+      file: ./src/mappings.ts
