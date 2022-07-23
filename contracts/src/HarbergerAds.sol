@@ -180,7 +180,7 @@ contract HarbergerAds is IHarbergerAds {
   /// ERC-721 STUFF
 
   function balanceOf(address _owner) view override external returns(uint256) {
-    return (0); // do later
+    return balances[_owner];
   }
 
   function ownerOf(uint256 _tokenId) view override external returns(address) {
@@ -189,31 +189,31 @@ contract HarbergerAds is IHarbergerAds {
   }
 
   function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) override external {
-    revert(); // unimplemented
+    revert("NOT IMPLEMENTED");
   }
 
   function safeTransferFrom(address _from, address _to, uint256 _tokenId) override external {
-    revert(); // unimplemented
+    revert("NOT IMPLEMENTED");
   }
 
   function transferFrom(address _from, address _to, uint256 _tokenId) override external {
-    revert();
+    revert("NOT IMPLEMENTED");
   }
 
   function approve(address to, uint256 tokenId) override external {
-    revert();
+    revert("NOT IMPLEMENTED");
   }
 
   function setApprovalForAll(address operator, bool _approved) override external {
-    revert();
+    revert("NOT IMPLEMENTED");
   }
 
   function getApproved(uint256 tokenId) pure override external returns (address) {
-    revert();
+    revert("NOT IMPLEMENTED");
   }
 
   function isApprovedForAll(address owner, address operator) pure override external returns (bool) {
-    revert();
+    revert("NOT IMPLEMENTED");
   }
 
   /// IERC165 STUFF
