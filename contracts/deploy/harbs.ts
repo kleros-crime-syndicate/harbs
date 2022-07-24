@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
+import { BigNumber } from "ethers";
 
 const deployHarbs: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts, getChainId } = hre;
@@ -17,7 +18,7 @@ const deployHarbs: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     erc20Address = (
       await deploy("Currency", {
         from: deployer,
-        args: ["Harberger Ads Currency", "HAC", 18],
+        args: ["Harberger Ads Currency", "HAC", BigNumber.from(10).pow(18 + 6)],
         log: true,
       })
     ).address;
