@@ -158,9 +158,19 @@ const HarbPage: React.FC = () => {
             const enoughAllowance = allowance?.gte(totalPrice);
             if (!enoughAllowance){
               toast("You need to increase allowance.")
-              await wMatic?.approve(ad.collectionAddress, totalPrice).then((tx) => tx.wait());
+              await wMatic?.approve(ad.collectionAddress, totalPrice).then(async (tx) => {
+                toast("Transaction sent.")
+                await tx.wait()
+                toast("Transaction mined.")
+              });
             }
-            await harbergerAds.buy(tokenID, ad.valuation, formatedValuation, formatedFund, { gasLimit: 4000000 });
+            await harbergerAds
+              .buy(tokenID, ad.valuation, formatedValuation, formatedFund, { gasLimit: 2000000 })
+              .then(async (tx) => {
+                toast("Transaction sent");
+                await tx.wait();
+                toast("Transaction mined");
+              });
           }
         }}
       >
@@ -168,12 +178,30 @@ const HarbPage: React.FC = () => {
       </button>
 
       {account?.toLowerCase() === ad.owner && (
-        <button className="border-2 border-black p-2" onClick={() => harbergerAds.revoke(tokenID)}>
+        <button
+          className="border-2 border-black p-2"
+          onClick={
+            () => harbergerAds.revoke(tokenID).then(async tx => {
+              toast("Transaction sent");
+              await tx.wait();
+              toast("Transaction mined");
+            })
+          }
+        >
           Revoke
         </button>
       )}
 
-      <button className="border-2 border-black p-2" onClick={() => harbergerAds.collect(tokenID)}>
+      <button
+        className="border-2 border-black p-2"
+        onClick={
+          () => harbergerAds.collect(tokenID).then(async tx => {
+            toast("Transaction sent");
+            await tx.wait();
+            toast("Transaction mined");
+          })
+        }
+      >
         Collect
       </button>
 

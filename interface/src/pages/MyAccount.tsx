@@ -1,15 +1,29 @@
 import { useMyAdsQuery } from "api/ads";
-import { NavLink } from "react-router-dom";
+import Harb from "components/Harb";
+import useWeb3 from "hooks/useWeb3";
 
 const MyAccount: React.FC = () => {
-  const ads = useMyAdsQuery();
+  const { account } = useWeb3();
+  const ads = useMyAdsQuery(account?.toLowerCase());
 
   return (
     <>
       {ads.length ? (
-        <div className="flex flex-col">
+        <div
+          className={`
+        grid
+        grid-cols-3
+        gap-6
+        justify-items-center
+        items-center
+        w-full
+        max-w-[1900px]
+        mx-auto
+        pb-16
+      `}
+        >
           {ads.map((ad) => (
-            <NavLink to={ad.id}>{ad.id}</NavLink>
+            <Harb key={ad.id} {...{ ad }} />
           ))}
         </div>
       ) : (
