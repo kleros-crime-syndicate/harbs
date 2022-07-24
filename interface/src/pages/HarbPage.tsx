@@ -222,7 +222,12 @@ const HarbPage: React.FC = () => {
                 setLoading(3);
                 try {
                   const fileUri = await uploadToIPFS("harb", Buffer.from(photo));
-                  harbergerAds.setAd(tokenID, fileUri);
+                  await harbergerAds.setAd(tokenID, fileUri)
+                    .then(async tx => {
+                      toast("Transaction sent");
+                      await tx.wait();
+                      toast("Transaction mined");
+                    });
                   setLoading(0);
                   setPhoto(null);
                 } catch (err) {
