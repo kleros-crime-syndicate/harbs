@@ -456,15 +456,67 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type AdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type AdQuery = { __typename?: 'Query', ad?: { __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collectionAddress: any, fund: any, lastPaidTimestamp: any, nextValuationTimestamp: any, collection: { __typename?: 'Collection', name: string, symbol: string, tokenURI: string, taxRate: any, currency: any, cooldownPeriod: any, collector: any, adCount: any } } | null };
+
 export type AdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type AdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
 
+export type MyAdsQueryVariables = Exact<{
+  me: Scalars['Bytes'];
+}>;
 
+
+export type MyAdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
+
+
+export const AdDocument = gql`
+    query ad($id: ID!) {
+  ad(id: $id) {
+    id
+    owner
+    uri
+    valuation
+    collectionAddress
+    fund
+    lastPaidTimestamp
+    nextValuationTimestamp
+    collection {
+      name
+      symbol
+      tokenURI
+      taxRate
+      currency
+      cooldownPeriod
+      collector
+      adCount
+    }
+  }
+}
+    `;
 export const AdsDocument = gql`
     query ads {
   ads {
+    id
+    owner
+    uri
+    valuation
+    collection {
+      name
+      symbol
+    }
+  }
+}
+    `;
+export const MyAdsDocument = gql`
+    query myAds($me: Bytes!) {
+  ads(where: {owner: $me}) {
     id
     owner
     uri
@@ -484,8 +536,14 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    ad(variables: AdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AdQuery>(AdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ad', 'query');
+    },
     ads(variables?: AdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AdsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AdsQuery>(AdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ads', 'query');
+    },
+    myAds(variables: MyAdsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyAdsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MyAdsQuery>(MyAdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'myAds', 'query');
     }
   };
 }

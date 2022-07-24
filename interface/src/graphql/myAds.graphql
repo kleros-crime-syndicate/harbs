@@ -1,0 +1,12 @@
+query myAds($me: Bytes!) {
+  ads(where: { owner: $me }) {
+    id
+    owner
+    uri
+    valuation
+    collection {
+      name
+      symbol
+    }
+  }
+}

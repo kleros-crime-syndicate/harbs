@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { AdsQuery } from "generated/graphql"
+import { AdsQuery } from "generated/graphql";
+import { ipfs } from "utils/ipfs";
 
-const Harb: React.FC<{ad: AdsQuery["ads"][0]}> = ({ ad }) => {
+const Harb: React.FC<{ ad: AdsQuery["ads"][0] }> = ({ ad }) => {
   return (
     <Link
       key={ad.id}
@@ -9,7 +10,7 @@ const Harb: React.FC<{ad: AdsQuery["ads"][0]}> = ({ ad }) => {
         w-full
         pb-[50%]
         relative
-        bg-[url('https://i.imgur.com/vz6opLM.png')]
+        bg-[url('${ad.uri ? "https://i.imgur.com/vz6opLM.png" : ipfs(ad.uri)}')]
         bg-no-repeat
         bg-cover
         bg-center
