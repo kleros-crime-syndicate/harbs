@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 description: Harbs Ads
-repository: https://github.com/kleros-crime-sydndicate/harbs
+repository: https://github.com/kleros-crime-syndicate/harbs
 schema:
   file: ./schema.graphql
 dataSources:
