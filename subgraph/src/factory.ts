@@ -1,9 +1,12 @@
 import { CollectionCreated } from "../generated/HarbergerAdsFactory/HarbergerAdsFactory";
 import { HarbergerAdsFull } from "../generated/templates/HarbergerAdsFull/HarbergerAdsFull";
+import { HarbergerAdsFull as HAFSource } from '../generated/templates';
 import { Ad, Collection } from "../generated/schema";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export function handleCollectionCreated(event: CollectionCreated): void {
+  HAFSource.create(event.params._address);
+  
   let collection = new Collection(event.params._address.toHexString());
   collection.adCount = event.params._totalSupply;
   collection.collector = event.params._collector;
