@@ -22,7 +22,7 @@ interface IInfoItem {
 const InfoItem: React.FC<IInfoItem> = ({ title, value }) => (
   <>
     <label className="text-right text-black/70">{title}</label>
-    <label className="text-left text-3xl">{value}</label>
+    <label className="col-span-2 text-left text-3xl">{value}</label>
   </>
 );
 
@@ -55,7 +55,7 @@ const HarbPage: React.FC = () => {
       <div className="flex items-center w-full justify-center ">
         <div className="flex flex-col items-center">
           <img src={ad.uri ? ipfs(ad.uri) : "https://i.imgur.com/vz6opLM.png"} />
-          { account == ad.owner &&
+          {account == ad.owner && (
             <div {...getRootProps()}>
               <input id="photo" {...getInputProps()} />
               <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
@@ -63,12 +63,12 @@ const HarbPage: React.FC = () => {
                 <p>Drop it here or click to upload</p>
               </div>
             </div>
-          }
+          )}
         </div>
-        <div className={`grid grid-cols-2 items-end gap-2`}>
+        <div className={`grid grid-cols-3 items-end gap-2`}>
           <label className="text-right text-black/70">Collection</label>
           <ALink
-            className="text-left text-4xl text-theme-darkish underline underline-offset-2"
+            className="col-span-2 text-left text-4xl text-theme-darkish underline underline-offset-2"
             href={`${EXPLORER_ENDPOINTS[chainId]}/address/${ad.collectionAddress}`}
           >
             {ad.collection.name}
@@ -76,18 +76,24 @@ const HarbPage: React.FC = () => {
           <InfoItem title="Fund" value={`${utils.formatUnits(ad.fund)} WMATIC`} />
           <label className="text-right text-black/70">Owner</label>
           <ALink
-            className="text-left text-4xl text-theme-darkish underline underline-offset-2"
+            className="col-span-2 text-left text-4xl text-theme-darkish underline underline-offset-2"
             href={`${EXPLORER_ENDPOINTS[chainId]}/address/${ad.owner}`}
           >
             {shortenAddress(ad.owner)}
           </ALink>
-          <InfoItem title="Image URI" value={ad.uri ? ad.uri : "Empty"} />
+          <label className="text-right text-black/70">URI</label>
+          <ALink
+            className="col-span-2 text-left text-4xl text-theme-darkish underline underline-offset-2"
+            href={ad.uri ? ipfs(ad.uri) : ""}
+          >
+            {ad.uri ? `${ad.uri.substring(0, 4)}.../${ad.uri.split("/")[1]}` : "EMPTY"}
+          </ALink>
           <InfoItem title="Valuation" value={`${utils.formatUnits(ad.valuation)} WMATIC`} />
 
           <InfoItem title="Tax (% per year)" value={`${ad.collection.taxRate / 100}%`} />
           <label className="text-right text-black/70">Tax collector</label>
           <ALink
-            className="text-left text-4xl text-theme-darkish underline underline-offset-2"
+            className="col-span-2 text-left text-4xl text-theme-darkish underline underline-offset-2"
             href={`${EXPLORER_ENDPOINTS[chainId]}/address/${ad.owner}`}
           >
             {shortenAddress(ad.collection.collector)}
@@ -104,7 +110,7 @@ const HarbPage: React.FC = () => {
           value={valuation}
           onChange={(e) => {
             if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
-              setValuation(e.target.value)
+              setValuation(e.target.value);
           }}
         />
 
@@ -119,7 +125,7 @@ const HarbPage: React.FC = () => {
               value={fund}
               onChange={(e) => {
                 if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
-                  setFund(e.target.value)
+                  setFund(e.target.value);
               }}
             />
           </>
@@ -133,22 +139,22 @@ const HarbPage: React.FC = () => {
             const formatedValuation = utils.parseUnits(valuation);
             const formatedFund = utils.parseUnits(fund);
             if (account === ad.owner) {
-              harbergerAds.changeValuation(tokenID, formatedValuation, {gasLimit: 4000000});
+              harbergerAds.changeValuation(tokenID, formatedValuation, { gasLimit: 4000000 });
               return;
             }
             const totalPrice = formatedFund.add(ad.valuation);
             const balance = await wMatic?.balanceOf(account);
             if (balance?.lt(totalPrice)) {
-              toast("You need more WMatic.")
-              return
+              toast("You need more WMatic.");
+              return;
             }
             const allowance = await wMatic?.allowance(account, ad.collectionAddress);
             const enoughAllowance = allowance?.gte(totalPrice);
-            if (!enoughAllowance){
-              toast("You need to increase allowance.")
+            if (!enoughAllowance) {
+              toast("You need to increase allowance.");
               await wMatic?.increaseAllowance(ad.collectionAddress, totalPrice);
             }
-            await harbergerAds.buy(tokenID, ad.valuation, formatedValuation, formatedFund, {gasLimit: 4000000});
+            await harbergerAds.buy(tokenID, ad.valuation, formatedValuation, formatedFund, { gasLimit: 4000000 });
           }
         }}
       >
