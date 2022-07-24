@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { utils } from "ethers";
 import { useAdQuery } from "api/ad";
 import ALink from "components/ALink";
 import useWeb3 from "hooks/useWeb3";
@@ -30,8 +31,8 @@ const HarbPage: React.FC = () => {
   const ad = useAdQuery(`${tokenID}@${address}`);
   const [photo, setPhoto] = useState<ArrayBuffer | null>(null);
   const [loading, setLoading] = useState(0);
-  const [valuation, setValuation] = useState<number>(ad ? parseInt(ad.valuation) : 0);
-  const [fund, setFund] = useState(0);
+  const [valuation, setValuation] = useState<string>(ad ? ad.valuation : "0");
+  const [fund, setFund] = useState("0");
   const harbergerAds = useHarbergerAds(address);
 
   useInterval(() => setLoading((l) => ((l + 1) % 3) + 1), loading ? 300 : null);
@@ -67,7 +68,7 @@ const HarbPage: React.FC = () => {
           >
             {ad.collection.name}
           </ALink>
-          <InfoItem title="Fund" value={`${ad.fund} WMATIC`} />
+          <InfoItem title="Fund" value={`${utils.formatUnits(ad.fund)} WMATIC`} />
           <label className="text-right text-black/70">Owner</label>
           <ALink
             className="text-left text-4xl text-theme-darkish underline underline-offset-2"
@@ -76,7 +77,7 @@ const HarbPage: React.FC = () => {
             {shortenAddress(ad.owner)}
           </ALink>
           <InfoItem title="Image URI" value={ad.uri ? ad.uri : "Empty"} />
-          <InfoItem title="Valuation" value={`${ad.valuation} WMATIC`} />
+          <InfoItem title="Valuation" value={`${utils.formatUnits(ad.valuation)} WMATIC`} />
 
           <InfoItem title="Tax (% per year)" value={`${ad.collection.taxRate / 100}%`} />
           <label className="text-right text-black/70">Tax collector</label>
@@ -94,11 +95,12 @@ const HarbPage: React.FC = () => {
         </label>
         <input
           id="valuation"
-          type="number"
-          min="0"
           className="border-black border-2 p-1 py-2"
           value={valuation}
-          onChange={(e) => setValuation(parseInt(e.target.value))}
+          onChange={(e) => {
+            if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
+              setValuation(e.target.value)
+          }}
         />
 
         {account !== ad.owner && (
@@ -108,11 +110,12 @@ const HarbPage: React.FC = () => {
             </label>
             <input
               id="fund"
-              type="number"
-              min="0"
               className="border-black border-2 p-1 py-2"
               value={fund}
-              onChange={(e) => setFund(parseInt(e.target.value))}
+              onChange={(e) => {
+                if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
+                  setFund(e.target.value)
+              }}
             />
           </>
         )}
@@ -122,10 +125,11 @@ const HarbPage: React.FC = () => {
         className="border-2 border-black p-2"
         onClick={() => {
           if (account === ad.owner) {
-            harbergerAds.changeValuation(tokenID, valuation);
+            harbergerAds.changeValuation(tokenID, utils.parseUnits(valuation), {gasLimit: 4000000});
             return;
           }
-          harbergerAds.buy(tokenID, ad.valuation, valuation, fund);
+          console.log(utils.parseUnits(valuation))
+          harbergerAds.buy(tokenID, ad.valuation, utils.parseUnits(valuation), utils.parseUnits(fund), {gasLimit: 4000000});
         }}
       >
         {account === ad.owner ? "Change Valuation" : "Buy"}
