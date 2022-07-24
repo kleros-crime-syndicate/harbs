@@ -1,0 +1,22 @@
+query ad($id: ID!) {
+  ad(id: $id) {
+    id
+    owner
+    uri
+    valuation
+    collectionAddress
+    fund
+    lastPaidTimestamp
+    nextValuationTimestamp
+    collection {
+      name
+      symbol
+      tokenURI
+      taxRate
+      currency
+      cooldownPeriod
+      collector
+      adCount
+    }
+  }
+}

@@ -10,9 +10,24 @@ export const useAdsQuery = () => {
   const [ads, setAds] = useState<Ads>([]);
 
   const fetchAds = async () => {
-    console.log({ chainId });
     if (!chainId) return;
     setAds((await queryGraph(chainId, "ads"))["ads"]);
+  };
+
+  useEffect(() => {
+    fetchAds();
+  }, [chainId]);
+
+  return ads;
+};
+
+export const useMyAdsQuery = (address?: string) => {
+  const { chainId } = useWeb3();
+  const [ads, setAds] = useState<Ads>([]);
+
+  const fetchAds = async () => {
+    if (!chainId || !address) return;
+    setAds((await queryGraph(chainId, "myAds", { me: address }))["ads"]);
   };
 
   useEffect(() => {

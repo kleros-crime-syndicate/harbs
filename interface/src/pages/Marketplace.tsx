@@ -4,8 +4,6 @@ import Harb from "components/Harb";
 const Marketplace: React.FC = () => {
   const ads = useAdsQuery();
 
-  console.log({ ads });
-
   return (
     <>
       <div
@@ -22,7 +20,7 @@ const Marketplace: React.FC = () => {
     `}
       >
         {ads.map((ad) => (
-          <Harb {...{ad}} />
+          <Harb {...{ ad }} />
         ))}
       </div>
     </>

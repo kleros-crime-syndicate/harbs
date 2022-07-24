@@ -46,9 +46,11 @@ const Header: React.FC = () => {
     `}
       >
         <div className="flex">
-          <Logo className="w-96 mr-8" />
+          <NavLink to="/">
+            <Logo className="w-96 mr-8" />
+          </NavLink>
           <div className="flex flex-col">
-            <Link to="/marketplace" text="MARKETPLACE" />
+            <Link to="/" text="MARKETPLACE" />
             <Link to="/account" text="MY ACCOUNT" />
             <Link to="/new-collection" text="NEW COLLECTION" />
           </div>
