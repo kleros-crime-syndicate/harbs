@@ -7,7 +7,7 @@ import { shortenAddress } from "utils/address";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import Modal from "components/Modal";
-import { uploadToIPFS } from "utils/ipfs";
+import { ipfs, uploadToIPFS } from "utils/ipfs";
 import useInterval from "hooks/useInterval";
 import { useHarbergerAds } from "hooks/useContract";
 
@@ -50,7 +50,7 @@ const HarbPage: React.FC = () => {
     <div className={`flex flex-col items-center max-w-[1900px] mx-auto gap-16`}>
       <div className="flex items-center w-full justify-center ">
         <div className="flex flex-col items-center">
-          <img src="https://i.imgur.com/vz6opLM.png" />
+          <img src={ad.uri ? "https://i.imgur.com/vz6opLM.png" : ipfs(ad.uri)} />
           <div {...getRootProps()}>
             <input id="photo" {...getInputProps()} />
             <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
