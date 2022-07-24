@@ -52,7 +52,7 @@ export function getContract(address: string, ABI: any, provider: JsonRpcProvider
 export const useHarbergerAds = (address?: string) => useContract<HarbergerAds>(address, HarbergerAdsJson.abi);
 
 export const useFactory = () =>
-  useContract<HarbergerAdsFactory>("0xE57cAB2c1632148Dc06FecB12104f24D7Bb3aD74", HarbergerAdsFactoryJson.abi);
+  useContract<HarbergerAdsFactory>("0x70dB9D239B2BC13dc5aa090A8BaA4222c42dFaD4", HarbergerAdsFactoryJson.abi);
 
 export const useWMatic = () => {
   const { library } = useWeb3React<Web3Provider>();

@@ -54,6 +54,20 @@ const config: HardhatUserConfig = {
           apiUrl: "https://api-testnet.polygonscan.com/"
         },
       },
+    },
+    polygon: {
+      chainId: 137,
+      url: "https://rpc.ankr.com/polygon",
+      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      live: true,
+      saveDeployments: true,
+      tags: ["staging"],      
+      verify: {
+        etherscan: {
+          apiKey: process.env.ARBISCAN_API_KEY,
+          apiUrl: "https://api.polygonscan.com/"
+        },
+      },
     }
   },
   namedAccounts: {
