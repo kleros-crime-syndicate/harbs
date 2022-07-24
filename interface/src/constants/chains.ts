@@ -1,9 +1,11 @@
 export enum ChainID {
-  MAINNET = 1,
+  POLYGON = 137,
+  MUMBAI = 80001,
 }
 
 export const CHAIN_ID_TO_NAME = {
-  [ChainID.MAINNET]: "mainnet",
+  [ChainID.MUMBAI]: "mumbai",
+  [ChainID.POLYGON]: "POLYGON",
 };
 
-export const SUPPORTED_CHAIN_IDS = [ChainID.MAINNET];
+export const SUPPORTED_CHAIN_IDS = [ChainID.MUMBAI];

@@ -27,18 +27,9 @@ const deployHarbs: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   }
 
   // Only for verification on PolygonScan, otherwise the ABI will remain unknown.
-  await deploy("HarbergerAds", {
+  await deploy("HarbergerAdsFull", {
     from: deployer,
-    args: [
-      3,
-      2000,
-      100,
-      erc20Address,
-      deployer,
-      "EthCC Hack 2022",
-      "HAC",
-      "ipfs/QmYmLeBs4pZcX2qD9Lup2SxKJGWHFFRpDhC4JDjsgJVXgt/harbs.json",
-    ],
+    args: [2000, 100, erc20Address, deployer, "Harberger Ads - EthCC Hack 2022", "HAC"],
     log: true,
   });
 
@@ -58,7 +49,7 @@ const deployHarbs: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     100,
     erc20Address,
     deployer,
-    "EthCC Hack 2022",
+    "Harberger Ads - EthCC Hack 2022",
     "HAC",
     "ipfs/QmYmLeBs4pZcX2qD9Lup2SxKJGWHFFRpDhC4JDjsgJVXgt/harbs.json"
   );

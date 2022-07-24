@@ -1,24 +1,32 @@
+import { useAdsQuery } from "api/ads";
 import Harb from "components/Harb";
 
-const Marketplace: React.FC = () => (
-  <>
-    <div
-      className={`
+const Marketplace: React.FC = () => {
+  const ads = useAdsQuery();
+
+  console.log({ ads });
+
+  return (
+    <>
+      <div
+        className={`
       grid
       grid-cols-3
-      gap-12
+      gap-6
       justify-items-center
       items-center
       w-full
       max-w-[1900px]
       mx-auto
+      pb-16
     `}
-    >
-      {[1,2,3,4].map(() => (
-        <Harb valuation={3000} address={"0x09870969898576587498768769"} />
-      ))}
-    </div>
-  </>
-);
+      >
+        {ads.map((ad) => (
+          <Harb {...{ad}} />
+        ))}
+      </div>
+    </>
+  );
+};
 
 export default Marketplace;

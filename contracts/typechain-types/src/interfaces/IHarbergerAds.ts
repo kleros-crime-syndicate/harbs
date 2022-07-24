@@ -199,6 +199,7 @@ export interface IHarbergerAdsInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "AdSet(uint256,string)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "TaxPaid(uint256,uint256)": EventFragment;
@@ -208,6 +209,7 @@ export interface IHarbergerAdsInterface extends utils.Interface {
     "ValuationSet(uint256,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AdSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TaxPaid"): EventFragment;
@@ -216,6 +218,14 @@ export interface IHarbergerAdsInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ValuationSet"): EventFragment;
 }
+
+export interface AdSetEventObject {
+  tokenId: BigNumber;
+  uri: string;
+}
+export type AdSetEvent = TypedEvent<[BigNumber, string], AdSetEventObject>;
+
+export type AdSetEventFilter = TypedEventFilter<AdSetEvent>;
 
 export interface ApprovalEventObject {
   owner: string;
@@ -635,6 +645,9 @@ export interface IHarbergerAds extends BaseContract {
   };
 
   filters: {
+    "AdSet(uint256,string)"(tokenId?: null, uri?: null): AdSetEventFilter;
+    AdSet(tokenId?: null, uri?: null): AdSetEventFilter;
+
     "Approval(address,address,uint256)"(
       owner?: PromiseOrValue<string> | null,
       approved?: PromiseOrValue<string> | null,

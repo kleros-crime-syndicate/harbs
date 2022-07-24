@@ -2,11 +2,11 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./HarbergerAds.sol";
+import "./HarbergerAdsFull.sol";
 
 contract HarbergerAdsFactory {
     event CollectionCreated(
-        HarbergerAds _address,
+        HarbergerAdsFull _address,
         uint256 _totalSupply,
         uint256 _taxRate,
         uint256 _cooldownPeriod,
@@ -24,25 +24,19 @@ contract HarbergerAdsFactory {
         string calldata _symbol,
         string calldata _tokenURI
     ) public {
-        HarbergerAds harbergerAdsContract = new HarbergerAds(
-            _totalSupply,
+        HarbergerAdsFull harbergerAds = new HarbergerAdsFull(
             _taxRate,
             _cooldownPeriod,
             _currency,
             _collector,
             _name,
-            _symbol,
-            _tokenURI
+            _symbol
         );
         {
-            emit CollectionCreated(
-                harbergerAdsContract,
-                _totalSupply,
-                _taxRate,
-                _cooldownPeriod,
-                _currency,
-                _collector
-            );
+            emit CollectionCreated(harbergerAds, _totalSupply, _taxRate, _cooldownPeriod, _currency, _collector);
+        }
+        for (uint256 i = 0; i < _totalSupply; i++) {
+            harbergerAds.safeMint(msg.sender, _tokenURI);
         }
     }
 }

@@ -8,6 +8,7 @@ module.exports = {
         "theme-lightish": "#C61AFF",
         theme: "#AC00E6",
         "theme-darkish": "#8600B3",
+        background: "#1A161F",
       },
       keyframes: {},
     },
