@@ -55,7 +55,7 @@ const HarbPage: React.FC = () => {
       <div className="flex items-center w-full justify-center ">
         <div className="flex flex-col items-center">
           <img src={ad.uri ? ipfs(ad.uri) : "https://i.imgur.com/vz6opLM.png"} />
-          {account == ad.owner && (
+          { account?.toLowerCase() === ad.owner &&
             <div {...getRootProps()}>
               <input id="photo" {...getInputProps()} />
               <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
@@ -63,7 +63,7 @@ const HarbPage: React.FC = () => {
                 <p>Drop it here or click to upload</p>
               </div>
             </div>
-          )}
+          }
         </div>
         <div className={`grid grid-cols-3 items-end gap-2`}>
           <label className="text-right text-black/70">Collection</label>
@@ -114,7 +114,7 @@ const HarbPage: React.FC = () => {
           }}
         />
 
-        {account !== ad.owner && (
+        {account?.toLowerCase() !== ad.owner && (
           <>
             <label className="text-lg text-right mr-2 text-black/70" htmlFor="fund">
               Starting fund
@@ -138,8 +138,14 @@ const HarbPage: React.FC = () => {
           if (account) {
             const formatedValuation = utils.parseUnits(valuation);
             const formatedFund = utils.parseUnits(fund);
-            if (account === ad.owner) {
-              harbergerAds.changeValuation(tokenID, formatedValuation, { gasLimit: 4000000 });
+            if (account.toLowerCase() === ad.owner) {
+              harbergerAds
+                .changeValuation(tokenID, formatedValuation, {gasLimit: 4000000})
+                .then(async tx => {
+                  toast("Transaction sent.");
+                  await tx.wait();
+                  toast("Transaction mined.");
+                });
               return;
             }
             const totalPrice = formatedFund.add(ad.valuation);
@@ -150,28 +156,54 @@ const HarbPage: React.FC = () => {
             }
             const allowance = await wMatic?.allowance(account, ad.collectionAddress);
             const enoughAllowance = allowance?.gte(totalPrice);
-            if (!enoughAllowance) {
-              toast("You need to increase allowance.");
-              await wMatic?.increaseAllowance(ad.collectionAddress, totalPrice);
+            if (!enoughAllowance){
+              toast("You need to increase allowance.")
+              await wMatic?.approve(ad.collectionAddress, totalPrice).then(async (tx) => {
+                toast("Transaction sent.")
+                await tx.wait()
+                toast("Transaction mined.")
+              });
             }
-            await harbergerAds.buy(tokenID, ad.valuation, formatedValuation, formatedFund, { gasLimit: 4000000 });
+            await harbergerAds
+              .buy(tokenID, ad.valuation, formatedValuation, formatedFund, { gasLimit: 2000000 })
+              .then(async (tx) => {
+                toast("Transaction sent");
+                await tx.wait();
+                toast("Transaction mined");
+              });
           }
         }}
       >
-        {account === ad.owner ? "Change Valuation" : "Buy"}
+        {account?.toLowerCase() === ad.owner ? "Change Valuation" : "Buy"}
       </button>
 
-      {account === ad.owner && (
-        <button className="border-2 border-black p-2" onClick={() => harbergerAds.revoke(tokenID)}>
+      {account?.toLowerCase() === ad.owner && (
+        <button
+          className="border-2 border-black p-2"
+          onClick={
+            () => harbergerAds.revoke(tokenID).then(async tx => {
+              toast("Transaction sent");
+              await tx.wait();
+              toast("Transaction mined");
+            })
+          }
+        >
           Revoke
         </button>
       )}
 
-      {account === ad.collection.collector && (
-        <button className="border-2 border-black p-2" onClick={() => harbergerAds.collect(tokenID)}>
-          Collect
-        </button>
-      )}
+      <button
+        className="border-2 border-black p-2"
+        onClick={
+          () => harbergerAds.collect(tokenID).then(async tx => {
+            toast("Transaction sent");
+            await tx.wait();
+            toast("Transaction mined");
+          })
+        }
+      >
+        Collect
+      </button>
 
       <Modal
         open={!!photo}
@@ -190,7 +222,12 @@ const HarbPage: React.FC = () => {
                 setLoading(3);
                 try {
                   const fileUri = await uploadToIPFS("harb", Buffer.from(photo));
-                  harbergerAds.setAd(tokenID, fileUri);
+                  await harbergerAds.setAd(tokenID, fileUri)
+                    .then(async tx => {
+                      toast("Transaction sent");
+                      await tx.wait();
+                      toast("Transaction mined");
+                    });
                   setLoading(0);
                   setPhoto(null);
                 } catch (err) {

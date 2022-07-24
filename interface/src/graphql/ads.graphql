@@ -1,5 +1,5 @@
 query ads {
-  ads {
+  ads(orderBy: collectionAddress) {
     id
     owner
     uri

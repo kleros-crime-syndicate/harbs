@@ -4,6 +4,7 @@ import { useFactory } from "hooks/useContract";
 import useWeb3 from "hooks/useWeb3";
 import { useDropzone } from "react-dropzone";
 import { isAddress } from "utils/address";
+import { toast } from "react-toastify";
 
 interface IField extends React.HTMLProps<HTMLInputElement> {
   formik: any;
@@ -79,7 +80,13 @@ const NewCollection = () => {
       )
         return;
 
-      await factory.create(totalSupply, taxRate, cooldownPeriod, currency, collector, name, symbol, tokenURI);
+      await factory
+        .create(totalSupply, taxRate, cooldownPeriod, currency, collector, name, symbol, tokenURI)
+        .then(async tx => {
+          toast("Transaction sent.");
+          await tx.wait();
+          toast("Transaction mined.");
+        });
     },
   });
 
