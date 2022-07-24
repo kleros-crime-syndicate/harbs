@@ -525,7 +525,7 @@ export const AdDocument = gql`
     `;
 export const AdsDocument = gql`
     query ads {
-  ads {
+  ads(orderBy: collectionAddress) {
     id
     owner
     uri
