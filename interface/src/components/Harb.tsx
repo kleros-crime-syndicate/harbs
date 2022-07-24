@@ -2,33 +2,30 @@ import { Link } from "react-router-dom";
 import { AdsQuery } from "generated/graphql";
 import { ipfs } from "utils/ipfs";
 import { useEffect, useState } from "react";
+import cn from "classnames";
 
 const Harb: React.FC<{ ad: AdsQuery["ads"][0] }> = ({ ad }) => {
-  const [erc20Symbol, setErc20Symbol] = useState<string>()
+  const [erc20Symbol, setErc20Symbol] = useState<string>();
 
   useEffect(() => {
     // todo fetch erc20 symbol from ad.collection.currency.
     setTimeout(() => {
-      setErc20Symbol("WMATIC")
-    }, 1000 + Math.random() * 500)
-  }, [])
+      setErc20Symbol("WMATIC");
+      // ad.collection.
+    }, 1000 + Math.random() * 500);
+  }, []);
 
   return (
     <Link
       key={ad.id}
-      className={`
-        w-full
-        pb-[50%]
-        relative
-        bg-[url('${ad.uri ? "https://i.imgur.com/vz6opLM.png" : ipfs(ad.uri)}')]
-        bg-no-repeat
-        bg-cover
-        bg-center
-        hover:cursor-pointer
-        hover:scale-105 hover:z-10 hover:shadow-xl
-        transition duration-150 ease-out
-        overflow-hidden
-      `}
+      className={cn(
+        "w-full pb-[50%] relative bg-no-repeat bg-cover bg-center hover:cursor-pointer hover:scale-105 hover:z-10 hover:shadow-xl transition duration-150 ease-out overflow-hidden"
+      )}
+      style={{
+        backgroundImage: ad.uri
+          ? `url('https://ipfs.kleros.io/ipfs/${ad.uri}')`
+          : "url('https://i.imgur.com/vz6opLM.png')",
+      }}
       to={`/${ad.id.split("@").reverse().join("/")}`}
     >
       <div

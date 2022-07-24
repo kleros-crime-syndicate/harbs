@@ -35,7 +35,7 @@ export type Ad = {
   /** Owner of the item, and taxpayer */
   owner: Scalars['Bytes'];
   /** Uri of the image */
-  uri: Scalars['String'];
+  uri?: Maybe<Scalars['String']>;
   /** Current valuation of the item */
   valuation: Scalars['BigInt'];
 };
@@ -172,6 +172,8 @@ export type Collection = {
   cooldownPeriod: Scalars['BigInt'];
   /** Address of the ERC-20 token used to value or tax */
   currency: Scalars['Bytes'];
+  /** Symbol of the currency */
+  currencySymbol?: Maybe<Scalars['String']>;
   /** {contract_address} */
   id: Scalars['ID'];
   /** Name of the collection */
@@ -220,6 +222,26 @@ export type Collection_Filter = {
   cooldownPeriod_not?: InputMaybe<Scalars['BigInt']>;
   cooldownPeriod_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   currency?: InputMaybe<Scalars['Bytes']>;
+  currencySymbol?: InputMaybe<Scalars['String']>;
+  currencySymbol_contains?: InputMaybe<Scalars['String']>;
+  currencySymbol_contains_nocase?: InputMaybe<Scalars['String']>;
+  currencySymbol_ends_with?: InputMaybe<Scalars['String']>;
+  currencySymbol_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  currencySymbol_gt?: InputMaybe<Scalars['String']>;
+  currencySymbol_gte?: InputMaybe<Scalars['String']>;
+  currencySymbol_in?: InputMaybe<Array<Scalars['String']>>;
+  currencySymbol_lt?: InputMaybe<Scalars['String']>;
+  currencySymbol_lte?: InputMaybe<Scalars['String']>;
+  currencySymbol_not?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_contains?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_ends_with?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_in?: InputMaybe<Array<Scalars['String']>>;
+  currencySymbol_not_starts_with?: InputMaybe<Scalars['String']>;
+  currencySymbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  currencySymbol_starts_with?: InputMaybe<Scalars['String']>;
+  currencySymbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
   currency_contains?: InputMaybe<Scalars['Bytes']>;
   currency_in?: InputMaybe<Array<Scalars['Bytes']>>;
   currency_not?: InputMaybe<Scalars['Bytes']>;
@@ -309,6 +331,7 @@ export enum Collection_OrderBy {
   Collector = 'collector',
   CooldownPeriod = 'cooldownPeriod',
   Currency = 'currency',
+  CurrencySymbol = 'currencySymbol',
   Id = 'id',
   Name = 'name',
   Symbol = 'symbol',
@@ -461,19 +484,19 @@ export type AdQueryVariables = Exact<{
 }>;
 
 
-export type AdQuery = { __typename?: 'Query', ad?: { __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collectionAddress: any, fund: any, lastPaidTimestamp: any, nextValuationTimestamp: any, collection: { __typename?: 'Collection', name: string, symbol: string, tokenURI: string, taxRate: any, currency: any, cooldownPeriod: any, collector: any, adCount: any } } | null };
+export type AdQuery = { __typename?: 'Query', ad?: { __typename?: 'Ad', id: string, owner: any, uri?: string | null, valuation: any, collectionAddress: any, fund: any, lastPaidTimestamp: any, nextValuationTimestamp: any, collection: { __typename?: 'Collection', name: string, symbol: string, tokenURI: string, taxRate: any, currency: any, cooldownPeriod: any, collector: any, adCount: any } } | null };
 
 export type AdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
+export type AdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri?: string | null, valuation: any, collectionAddress: any, fund: any, lastPaidTimestamp: any, nextValuationTimestamp: any, collection: { __typename?: 'Collection', name: string, symbol: string, tokenURI: string, taxRate: any, currency: any, cooldownPeriod: any, collector: any, adCount: any } }> };
 
 export type MyAdsQueryVariables = Exact<{
   me: Scalars['Bytes'];
 }>;
 
 
-export type MyAdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri: string, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
+export type MyAdsQuery = { __typename?: 'Query', ads: Array<{ __typename?: 'Ad', id: string, owner: any, uri?: string | null, valuation: any, collection: { __typename?: 'Collection', name: string, symbol: string } }> };
 
 
 export const AdDocument = gql`
@@ -507,9 +530,19 @@ export const AdsDocument = gql`
     owner
     uri
     valuation
+    collectionAddress
+    fund
+    lastPaidTimestamp
+    nextValuationTimestamp
     collection {
       name
       symbol
+      tokenURI
+      taxRate
+      currency
+      cooldownPeriod
+      collector
+      adCount
     }
   }
 }
