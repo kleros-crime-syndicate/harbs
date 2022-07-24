@@ -8,6 +8,7 @@ import Marketplace from "pages/Marketplace";
 import MyAccount from "pages/MyAccount";
 import NewCollection from "pages/NewCollection";
 import HarbPage from "pages/HarbPage";
+import DemoPage from "pages/Demo";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,6 +18,7 @@ const App: React.FC = () => (
   <BrowserRouter>
     <ToastContainer position="top-center" />
     <Routes>
+      <Route path="demo" element={<DemoPage />} />
       <Route path="/" element={<Layout />}>
         <Route index element={<Marketplace />} />
         <Route path="account" element={<MyAccount />} />
