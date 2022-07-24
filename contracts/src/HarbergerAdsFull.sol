@@ -215,7 +215,7 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
 
         emit ValuationSet(_tokenId, 0);
         emit TokenFunded(_tokenId, 0);
-        emit Transfer(oldOwner, address(0), _tokenId);
+        emit Transfer(oldOwner, collector, _tokenId);
     }
 
     function _payTax(uint256 _tokenId, uint256 _amount) internal {
@@ -251,6 +251,12 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
     function safeMint(address _to, string memory _uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
+        Ad storage ad = ads[tokenId];
+        ad.owner = _to;
+        ad.lastPaidTimestamp = block.timestamp;
+        ad.valuation = 0;
+        ad.nextValuationTimestamp = block.timestamp + cooldownPeriod;
+
         _safeMint(_to, tokenId);
         _setTokenURI(tokenId, _uri);
     }
