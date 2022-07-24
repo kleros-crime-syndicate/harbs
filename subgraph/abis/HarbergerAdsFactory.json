@@ -1,12 +1,12 @@
 {
-  "address": "0x8F53f533531a40BdaA832254e282ed1b21D83F71",
+  "address": "0x1432bC7Ef96Db3F2d0A704cbdDCF2209Dea39740",
   "abi": [
     {
       "anonymous": false,
       "inputs": [
         {
           "indexed": false,
-          "internalType": "contract HarbergerAds",
+          "internalType": "contract HarbergerAdsFull",
           "name": "_address",
           "type": "address"
         },
