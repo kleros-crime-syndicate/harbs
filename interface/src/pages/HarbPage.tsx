@@ -50,7 +50,7 @@ const HarbPage: React.FC = () => {
     <div className={`flex flex-col items-center max-w-[1900px] mx-auto gap-16`}>
       <div className="flex items-center w-full justify-center ">
         <div className="flex flex-col items-center">
-          <img src={ad.uri ? "https://i.imgur.com/vz6opLM.png" : ipfs(ad.uri)} />
+          <img src={ad.uri ? ipfs(ad.uri) : "https://i.imgur.com/vz6opLM.png"} />
           <div {...getRootProps()}>
             <input id="photo" {...getInputProps()} />
             <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
@@ -67,7 +67,7 @@ const HarbPage: React.FC = () => {
           >
             {ad.collection.name}
           </ALink>
-          <InfoItem title="Fund" value={ad.fund} />
+          <InfoItem title="Fund" value={`${ad.fund} WMATIC`} />
           <label className="text-right text-black/70">Owner</label>
           <ALink
             className="text-left text-4xl text-theme-darkish underline underline-offset-2"
@@ -75,10 +75,10 @@ const HarbPage: React.FC = () => {
           >
             {shortenAddress(ad.owner)}
           </ALink>
-          <InfoItem title="URI" value={ad.uri} />
-          <InfoItem title="Valuation" value={ad.valuation} />
+          <InfoItem title="Image URI" value={ad.uri ? ad.uri : "Empty"} />
+          <InfoItem title="Valuation" value={`${ad.valuation} WMATIC`} />
 
-          <InfoItem title="Tax (% per year)" value={ad.collection.taxRate} />
+          <InfoItem title="Tax (% per year)" value={`${ad.collection.taxRate / 100}%`} />
           <label className="text-right text-black/70">Tax collector</label>
           <ALink
             className="text-left text-4xl text-theme-darkish underline underline-offset-2"

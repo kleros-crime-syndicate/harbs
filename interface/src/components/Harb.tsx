@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
 import { AdsQuery } from "generated/graphql";
 import { ipfs } from "utils/ipfs";
+import { useEffect, useState } from "react";
 
 const Harb: React.FC<{ ad: AdsQuery["ads"][0] }> = ({ ad }) => {
+  const [erc20Symbol, setErc20Symbol] = useState<string>()
+
+  useEffect(() => {
+    // todo fetch erc20 symbol from ad.collection.currency.
+    setTimeout(() => {
+      setErc20Symbol("WMATIC")
+    }, 1000 + Math.random() * 500)
+  }, [])
+
   return (
     <Link
       key={ad.id}
@@ -41,7 +51,7 @@ const Harb: React.FC<{ ad: AdsQuery["ads"][0] }> = ({ ad }) => {
         <div className="flex flex-col">
           <p className="leading-5 p-0 text-white text-lg">Valuation</p>
           <p className="leading-5 text-white text-3xl">
-            {ad.valuation} {ad.collection.symbol}
+            {ad.valuation} {erc20Symbol ? erc20Symbol : "???"}
           </p>
         </div>
         {/* <div className="flex flex-col">

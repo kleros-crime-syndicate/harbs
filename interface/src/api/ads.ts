@@ -6,11 +6,13 @@ import { queryGraph } from ".";
 type Ads = AdsQuery["ads"];
 
 export const useAdsQuery = () => {
-  const { chainId } = useWeb3();
+  let { chainId } = useWeb3();
   const [ads, setAds] = useState<Ads>([]);
 
   const fetchAds = async () => {
-    if (!chainId) return;
+    if (!chainId) {
+      chainId = 80001; // default to mumbai
+    }
     setAds((await queryGraph(chainId, "ads"))["ads"]);
   };
 

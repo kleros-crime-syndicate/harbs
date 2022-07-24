@@ -4,9 +4,19 @@ query ads {
     owner
     uri
     valuation
+    collectionAddress
+    fund
+    lastPaidTimestamp
+    nextValuationTimestamp
     collection {
       name
       symbol
+      tokenURI
+      taxRate
+      currency
+      cooldownPeriod
+      collector
+      adCount
     }
   }
 }

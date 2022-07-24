@@ -17,6 +17,8 @@ type Collection @entity {
   cooldownPeriod: BigInt!
   "Address of the ERC-20 token used to value or tax"
   currency: Bytes!
+  "Symbol of the currency"
+  currencySymbol: String
   "Ads belonging to this collection"
   ads: [Ad!]! @derivedFrom(field: "collection")
 }
@@ -31,7 +33,7 @@ type Ad @entity {
   "Collection this ad belongs to"
   collection: Collection!
   "Uri of the image"
-  uri: String!
+  uri: String
   "Current valuation of the item"
   valuation: BigInt!
   "Funds allocated to pay for taxes"

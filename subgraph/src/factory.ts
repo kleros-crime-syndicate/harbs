@@ -1,5 +1,5 @@
 import { CollectionCreated } from "../generated/HarbergerAdsFactory/HarbergerAdsFactory";
-import { HarbergerAds } from "../generated/templates/HarbergerAds/HarbergerAds";
+import { HarbergerAdsFull } from "../generated/templates/HarbergerAdsFull/HarbergerAdsFull";
 import { Ad, Collection } from "../generated/schema";
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
@@ -11,7 +11,7 @@ export function handleCollectionCreated(event: CollectionCreated): void {
   collection.currency = event.params._currency;
   collection.taxRate = event.params._taxRate;
 
-  let collectionContract = HarbergerAds.bind(event.params._address);
+  let collectionContract = HarbergerAdsFull.bind(event.params._address);
   collection.name = collectionContract.name();
   collection.symbol = collectionContract.symbol();
   collection.tokenURI = collectionContract.tokenURI(BigInt.fromU32(0));
@@ -22,7 +22,6 @@ export function handleCollectionCreated(event: CollectionCreated): void {
     ad.collection = collection.id;
     ad.collectionAddress = event.params._address;
     ad.owner = Bytes.fromHexString("0x0000000000000000000000000000000000000000");
-    ad.uri = "undefined";
     ad.valuation = BigInt.fromU32(0);
     ad.fund = BigInt.fromU32(0);
     ad.lastPaidTimestamp = BigInt.fromU32(0);
