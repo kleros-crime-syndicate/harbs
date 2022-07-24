@@ -9,7 +9,7 @@ import HarbergerAdsJson from "@harbs/harbs-contracts/deployments/mumbai/Harberge
 import HarbergerAdsFactoryJson from "@harbs/harbs-contracts/deployments/mumbai/HarbergerAdsFactory.json";
 
 import { HarbergerAds, HarbergerAdsFactory } from "generated/contracts";
-// import Erc from "@harbs/harbs-contracts/deployments/mumbai/";
+import { Currency__factory } from "@harbs/harbs-contracts/typechain-types/factories/src/Currency__factory";
 
 export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
@@ -53,5 +53,10 @@ export const useHarbergerAds = (address?: string) => useContract<HarbergerAds>(a
 
 export const useFactory = () =>
   useContract<HarbergerAdsFactory>("0xc89312e08c792445b87714a3938be0b43d0d929a", HarbergerAdsFactoryJson.abi);
+
+export const useWMatic = () => {
+  const { library } = useWeb3React<Web3Provider>();
+  return library ? Currency__factory.connect("0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889", library.getSigner()) : undefined;
+}
 
 // export const useERC20 = (address?: string) => useContract(address, ERC20.abi);

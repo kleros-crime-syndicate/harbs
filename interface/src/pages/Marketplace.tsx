@@ -20,7 +20,7 @@ const Marketplace: React.FC = () => {
     `}
       >
         {ads.map((ad) => (
-          <Harb {...{ ad }} />
+          <Harb key={ad.id} {...{ ad }} />
         ))}
       </div>
     </>

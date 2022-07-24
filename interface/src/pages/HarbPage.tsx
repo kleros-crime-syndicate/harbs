@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { utils } from "ethers";
 import { useAdQuery } from "api/ad";
 import ALink from "components/ALink";
 import useWeb3 from "hooks/useWeb3";
@@ -10,6 +11,8 @@ import Modal from "components/Modal";
 import { ipfs, uploadToIPFS } from "utils/ipfs";
 import useInterval from "hooks/useInterval";
 import { useHarbergerAds } from "hooks/useContract";
+import { useWMatic } from "hooks/useContract";
+import { toast } from "react-toastify";
 
 interface IInfoItem {
   title: string;
@@ -30,9 +33,10 @@ const HarbPage: React.FC = () => {
   const ad = useAdQuery(`${tokenID}@${address}`);
   const [photo, setPhoto] = useState<ArrayBuffer | null>(null);
   const [loading, setLoading] = useState(0);
-  const [valuation, setValuation] = useState<number>(ad ? parseInt(ad.valuation) : 0);
-  const [fund, setFund] = useState(0);
+  const [valuation, setValuation] = useState<string>(ad ? ad.valuation : "0");
+  const [fund, setFund] = useState("0");
   const harbergerAds = useHarbergerAds(address);
+  const wMatic = useWMatic();
 
   useInterval(() => setLoading((l) => ((l + 1) % 3) + 1), loading ? 300 : null);
 
@@ -51,13 +55,15 @@ const HarbPage: React.FC = () => {
       <div className="flex items-center w-full justify-center ">
         <div className="flex flex-col items-center">
           <img src={ad.uri ? ipfs(ad.uri) : "https://i.imgur.com/vz6opLM.png"} />
-          <div {...getRootProps()}>
-            <input id="photo" {...getInputProps()} />
-            <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
-              <p>Want to change the image?</p>
-              <p>Drop it here or click to upload</p>
+          { account == ad.owner &&
+            <div {...getRootProps()}>
+              <input id="photo" {...getInputProps()} />
+              <div className="mt-2 px-8 border-black border-2 border-dashed p-1 cursor-pointer">
+                <p>Want to change the image?</p>
+                <p>Drop it here or click to upload</p>
+              </div>
             </div>
-          </div>
+          }
         </div>
         <div className={`grid grid-cols-2 items-end gap-2`}>
           <label className="text-right text-black/70">Collection</label>
@@ -67,7 +73,7 @@ const HarbPage: React.FC = () => {
           >
             {ad.collection.name}
           </ALink>
-          <InfoItem title="Fund" value={`${ad.fund} WMATIC`} />
+          <InfoItem title="Fund" value={`${utils.formatUnits(ad.fund)} WMATIC`} />
           <label className="text-right text-black/70">Owner</label>
           <ALink
             className="text-left text-4xl text-theme-darkish underline underline-offset-2"
@@ -76,7 +82,7 @@ const HarbPage: React.FC = () => {
             {shortenAddress(ad.owner)}
           </ALink>
           <InfoItem title="Image URI" value={ad.uri ? ad.uri : "Empty"} />
-          <InfoItem title="Valuation" value={`${ad.valuation} WMATIC`} />
+          <InfoItem title="Valuation" value={`${utils.formatUnits(ad.valuation)} WMATIC`} />
 
           <InfoItem title="Tax (% per year)" value={`${ad.collection.taxRate / 100}%`} />
           <label className="text-right text-black/70">Tax collector</label>
@@ -94,11 +100,12 @@ const HarbPage: React.FC = () => {
         </label>
         <input
           id="valuation"
-          type="number"
-          min="0"
           className="border-black border-2 p-1 py-2"
           value={valuation}
-          onChange={(e) => setValuation(parseInt(e.target.value))}
+          onChange={(e) => {
+            if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
+              setValuation(e.target.value)
+          }}
         />
 
         {account !== ad.owner && (
@@ -108,11 +115,12 @@ const HarbPage: React.FC = () => {
             </label>
             <input
               id="fund"
-              type="number"
-              min="0"
               className="border-black border-2 p-1 py-2"
               value={fund}
-              onChange={(e) => setFund(parseInt(e.target.value))}
+              onChange={(e) => {
+                if (e.target.value !== undefined && /^\d*(\.\d{0,18}){0,1}$/.test(e.target.value))
+                  setFund(e.target.value)
+              }}
             />
           </>
         )}
@@ -120,12 +128,28 @@ const HarbPage: React.FC = () => {
 
       <button
         className="border-2 border-black p-2"
-        onClick={() => {
-          if (account === ad.owner) {
-            harbergerAds.changeValuation(tokenID, valuation);
-            return;
+        onClick={async () => {
+          if (account) {
+            const formatedValuation = utils.parseUnits(valuation);
+            const formatedFund = utils.parseUnits(fund);
+            if (account === ad.owner) {
+              harbergerAds.changeValuation(tokenID, formatedValuation, {gasLimit: 4000000});
+              return;
+            }
+            const totalPrice = formatedFund.add(ad.valuation);
+            const balance = await wMatic?.balanceOf(account);
+            if (balance?.lt(totalPrice)) {
+              toast("You need more WMatic.")
+              return
+            }
+            const allowance = await wMatic?.allowance(account, ad.collectionAddress);
+            const enoughAllowance = allowance?.gte(totalPrice);
+            if (!enoughAllowance){
+              toast("You need to increase allowance.")
+              await wMatic?.increaseAllowance(ad.collectionAddress, totalPrice);
+            }
+            await harbergerAds.buy(tokenID, ad.valuation, formatedValuation, formatedFund, {gasLimit: 4000000});
           }
-          harbergerAds.buy(tokenID, ad.valuation, valuation, fund);
         }}
       >
         {account === ad.owner ? "Change Valuation" : "Buy"}

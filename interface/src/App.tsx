@@ -15,7 +15,7 @@ const api = getSdk(new GraphQLClient("https://thegraph"));
 
 const App: React.FC = () => (
   <BrowserRouter>
-    <ToastContainer />
+    <ToastContainer position="top-center" />
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Marketplace />} />
