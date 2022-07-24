@@ -102,6 +102,7 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
         adsBalanceOf[msg.sender] += 1;
 
         emit Transfer(oldOwner, msg.sender, _tokenId);
+        emit TokenBought(_tokenId, msg.sender, _offer);
         emit ValuationSet(_tokenId, _valuation);
         emit TokenFunded(_tokenId, _fund);
     }
