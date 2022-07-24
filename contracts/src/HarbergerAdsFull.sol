@@ -74,7 +74,9 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
             // first, original owner pays due taxes
             _payTax(_tokenId, ad.fund); // updates ad.fund
             // reimburse remainder
-            currency.transfer(ad.owner, ad.fund);
+            if (ad.owner != address(0)) {
+                currency.transfer(ad.owner, ad.fund);
+            }
 
             // buy the item from previous owner
             require(
@@ -86,7 +88,9 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
         require(_fund >= minimumFund(_valuation), "Not enough funds");
         require(currency.transferFrom(msg.sender, address(this), _fund), "Bad transfer");
 
-        if (ad.owner != address(0)) adsBalanceOf[ad.owner] -= 1;
+        if (ad.owner != address(0)) {
+            adsBalanceOf[ad.owner] -= 1;
+        }
 
         // set the ad data
         ad.owner = msg.sender;
@@ -215,11 +219,10 @@ contract HarbergerAdsFull is IHarbergerAds, ERC721, ERC721Enumerable, ERC721URIS
 
     function _payTax(uint256 _tokenId, uint256 _amount) internal {
         Ad storage ad = ads[_tokenId];
-        currency.transfer(collector, _amount);
         ad.fund -= _amount;
         ad.lastPaidTimestamp = block.timestamp;
-
         emit TaxPaid(_tokenId, _amount);
+        currency.transfer(collector, _amount);
     }
 
     /// VIEW FUNCTIONS
